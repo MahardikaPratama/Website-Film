@@ -1,0 +1,119 @@
+[
+    {
+        "title": "Fullmetal Alchemist: Brotherhood",
+        "year": "2009",
+        "genres": "Action, Adventure, Drama",
+        "rating": "9.2/10",
+        "views": "251234",
+        "image": "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Attack on Titan",
+        "year": "2013",
+        "genres": "Action, Drama, Fantasy",
+        "rating": "8.9/10",
+        "views": "321456",
+        "image": "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Death Note",
+        "year": "2006",
+        "genres": "Crime, Drama, Mystery",
+        "rating": "8.9/10",
+        "views": "289765",
+        "image": "https://cdn.myanimelist.net/images/anime/1079/138100.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Steins;Gate",
+        "year": "2011",
+        "genres": "Animation, Drama, Sci-Fi",
+        "rating": "8.8/10",
+        "views": "179234",
+        "image": "https://cdn.myanimelist.net/images/anime/1935/127974.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "My Hero Academia",
+        "year": "2016",
+        "genres": "Action, Comedy, Superhero",
+        "rating": "8.7/10",
+        "views": "231456",
+        "image": "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "One Piece",
+        "year": "1999",
+        "genres": "Action, Adventure, Fantasy",
+        "rating": "8.6/10",
+        "views": "345678",
+        "image": "https://cdn.myanimelist.net/images/anime/1244/138851.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Naruto",
+        "year": "2002",
+        "genres": "Action, Adventure, Fantasy",
+        "rating": "8.5/10",
+        "views": "298765",
+        "image": "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Cowboy Bebop",
+        "year": "1998",
+        "genres": "Action, Adventure, Comedy",
+        "rating": "8.5/10",
+        "views": "167890",
+        "image": "https://cdn.myanimelist.net/images/anime/4/19644.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Code Geass: Lelouch of the Rebellion",
+        "year": "2006",
+        "genres": "Action, Drama, Mecha",
+        "rating": "8.6/10",
+        "views": "198765",
+        "image": "https://cdn.myanimelist.net/images/anime/1032/135088.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Demon Slayer: Kimetsu no Yaiba",
+        "year": "2019",
+        "genres": "Action, Fantasy, Shounen",
+        "rating": "8.7/10",
+        "views": "345678",
+        "image": "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Hunter x Hunter",
+        "year": "2011",
+        "genres": "Action, Adventure, Fantasy",
+        "rating": "8.6/10",
+        "views": "199876",
+        "image": "https://cdn.myanimelist.net/images/anime/1337/99013.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Your Name",
+        "year": "2016",
+        "genres": "Animation, Drama, Fantasy",
+        "rating": "8.9/10",
+        "views": "243567",
+        "image": "https://cdn.myanimelist.net/images/anime/5/87048.jpg",
+        "country": "Japan"
+    },
+    {
+        "title": "Spirited Away",
+        "year": "2001",
+        "genres": "Animation, Adventure, Fantasy",
+        "rating": "8.6/10",
+        "views": "189765",
+        "image": "https://cdn.myanimelist.net/images/anime/6/79597.jpg",
+        "country": "Japan"
+    }
+]
