@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Card from "../components/Card";
 import FilterSortOptions from "../components/FilterSortOptions";
 import SearchCard from "../components/SearchCard";
+import Footer from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import '../css/style.css';
 import moviesData from '../data/movies.json';
@@ -11,8 +12,10 @@ const Home = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [searchedTerm, setSearchedTerm] = useState(''); // State untuk keyword pencarian
+    const [searchedTerm, setSearchedTerm] = useState(''); 
     const [movies] = useState(moviesData);
+    const [sortOption, setSortOption] = useState('title-asc');
+    const [showSortedResults, setShowSortedResults] = useState(false);
     const navigate = useNavigate();
     
     const toggleSidebar = () => {
@@ -52,9 +55,40 @@ const Home = () => {
         setSearchResults(filteredResults);
     };
 
+    const handleSubmitClick = () => {
+        setShowSortedResults(true);
+    };
+    
+
+    const handleSortChange = (option) => {
+        setSortOption(option);
+    };
+
+    // Function to sort movies based on selected option
+    const sortMovies = (moviesList) => {
+        const sortedList = [...moviesList];
+        switch (sortOption) {
+            case 'title-asc':
+                return sortedList.sort((a, b) => a.title.localeCompare(b.title));
+            case 'title-desc':
+                return sortedList.sort((a, b) => b.title.localeCompare(a.title));
+            case 'year-asc':
+                return sortedList.sort((a, b) => a.year - b.year);
+            case 'year-desc':
+                return sortedList.sort((a, b) => b.year - a.year);
+            default:
+                return sortedList;
+        }
+    };
+    
+    let sortedResults = [];
+    if (showSortedResults) {
+        sortedResults = sortMovies(movies);
+    }
+
     return (
-        <div className="text-gray-300 bg-gray-900 min-h-screen flex flex-col">
-            <div className="flex flex-col md:flex-row flex-1">
+        <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
+            <div className="flex flex-col flex-1 md:flex-row">
                 <Sidebar
                     isVisible={isSidebarVisible}
                     toggleSidebar={toggleSidebar}
@@ -116,11 +150,11 @@ const Home = () => {
                     </div>
 
                     {/* Filter and Sort Options */}
-                    <FilterSortOptions />
+                    <FilterSortOptions onSortChange={handleSortChange} />
 
                     {/* Submit Button */}
                     <div className="flex justify-start mb-4">
-                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">Submit
+                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5" onClick={handleSubmitClick}>Submit
                         </button>
                     </div>
 
@@ -132,6 +166,24 @@ const Home = () => {
                             </p>
                         </section>
                     )}
+
+                    {/* Tampilkan sortedResults hanya setelah tombol Submit diklik */}
+                    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    {showSortedResults && (
+                        sortedResults.map((item, index) => (
+                                <Card
+                                    key={index}
+                                    title={item.title}
+                                    year={item.year}
+                                    genres={item.genres}
+                                    rating={item.rating}
+                                    views={item.views}
+                                    imageURL={item.image}
+                                    onClick={handleDramaClick}
+                                />
+                        ))
+                    )}
+                    </section>
 
                     {/* Menampilkan konten default atau hasil pencarian */}
                     {searchedTerm && searchResults.length > 0 ? (
@@ -154,11 +206,11 @@ const Home = () => {
                                 <p className="text-lg font-medium text-gray-400">
                                     No results found for <span className="text-orange-600">"{searchedTerm}"</span>
                                 </p>
-                                <p className="text-sm text-gray-500 mt-2">
+                                <p className="mt-2 text-sm text-gray-500">
                                     Try searching with different keywords or check the spelling.
                                 </p>
                             </div>
-                    ) : (
+                    ) : !showSortedResults && (
                         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                             {movies.map((movie, index) => (
                                 <Card
@@ -176,9 +228,8 @@ const Home = () => {
                     )}
                 </main>
             </div>
-            <footer className="z-50 p-4 text-center text-gray-300 bg-gray-800">
-                <p>&copy; 2024 DramaKu. All rights reserved.</p>
-            </footer>
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };
