@@ -1,119 +1,319 @@
 [
     {
+        "id": 1,
         "title": "Fullmetal Alchemist: Brotherhood",
         "year": "2009",
-        "genres": "Action, Adventure, Drama",
-        "rating": "9.2/10",
-        "views": "251234",
+        "genres": ["Action", "Adventure", "Drama"],
+        "rating": 9.2,
+        "availability": ["Netflix", "Crunchyroll"],
         "image": "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
-        "country": "Japan"
+        "synopsis": "Two brothers go on a quest...",
+        "otherTitles": ["Brotherhood", "Fullmetal Alchemist"],
+        "actors": [
+          {
+            "name": "Romi Park",
+            "picture": "https://th.bing.com/th/id/OIP.8Gy_YQNByTn6f-hqfCgyZAHaHa?rs=1&pid=ImgDetMain"
+          },
+          {
+            "name": "Rie Kugimiya",
+            "picture": "https://th.bing.com/th/id/OIP.gLSi04IXOOn6pPB-zVE7RQAAAA?rs=1&pid=ImgDetMain"
+          },
+          {
+            "name": "Shinichiro Miki ",
+            "picture": "https://th.bing.com/th/id/OIP.h5bdLtKYwVHRLKpC_I3rxAAAAA?w=210&h=240&rs=1&pid=ImgDetMain"
+          }
+          ,          {
+            "name": "Shinichiro Miki ",
+            "picture": "https://th.bing.com/th/id/OIP.h5bdLtKYwVHRLKpC_I3rxAAAAA?w=210&h=240&rs=1&pid=ImgDetMain"
+          },
+          {
+            "name": "Shinichiro Miki ",
+            "picture": "https://th.bing.com/th/id/OIP.h5bdLtKYwVHRLKpC_I3rxAAAAA?w=210&h=240&rs=1&pid=ImgDetMain"
+          },          {
+            "name": "Shinichiro Miki ",
+            "picture": "https://th.bing.com/th/id/OIP.h5bdLtKYwVHRLKpC_I3rxAAAAA?w=210&h=240&rs=1&pid=ImgDetMain"
+          }
+        ],
+        "trailer": "https://www.youtube.com/watch?v=RNwNA1M8A94",
+        "thumbnail": "https://img.youtube.com/vi/RNwNA1M8A94/maxresdefault.jpg", 
+        "comments": [
+          {
+            "username": "User 1",
+            "date": "Aug 30, 2024",
+            "rating": "★★★★★",
+            "text": "An amazing series!"
+          }
+        ]
+      },
+    {
+      "id": 2,
+      "title": "Attack on Titan",
+      "year": "2013",
+      "genres": ["Action", "Drama", "Fantasy"],
+      "rating": 8.9,
+      "availability": ["Netflix", "Hulu"],
+      "image": "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+      "synopsis": "Humans fight titans...",
+      "otherTitles": ["Shingeki no Kyojin"],
+      "actors": [
+        {
+          "name": "Actor A",
+          "picture": "actorA_image_link.jpg"
+        },
+        {
+          "name": "Actor B",
+          "picture": "actorB_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 2",
+          "date": "Sep 1, 2024",
+          "rating": "★★★★☆",
+          "text": "Great animation and story."
+        }
+      ]
     },
     {
-        "title": "Attack on Titan",
-        "year": "2013",
-        "genres": "Action, Drama, Fantasy",
-        "rating": "8.9/10",
-        "views": "321456",
-        "image": "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
-        "country": "Japan"
+      "id": 3,
+      "title": "Death Note",
+      "year": "2006",
+      "genres": ["Crime", "Drama", "Mystery"],
+      "rating": 8.9,
+      "availability": ["Crunchyroll"],
+      "image": "https://cdn.myanimelist.net/images/anime/1079/138100.jpg",
+      "synopsis": "A student discovers a notebook that allows him to kill...",
+      "otherTitles": ["Desu Nōto"],
+      "actors": [
+        {
+          "name": "Actor C",
+          "picture": "actorC_image_link.jpg"
+        },
+        {
+          "name": "Actor D",
+          "picture": "actorD_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 3",
+          "date": "Sep 2, 2024",
+          "rating": "★★★★★",
+          "text": "A mind-bending thriller."
+        }
+      ]
     },
     {
-        "title": "Death Note",
-        "year": "2006",
-        "genres": "Crime, Drama, Mystery",
-        "rating": "8.9/10",
-        "views": "289765",
-        "image": "https://cdn.myanimelist.net/images/anime/1079/138100.jpg",
-        "country": "Japan"
+      "id": 4,
+      "title": "Steins;Gate",
+      "year": "2011",
+      "genres": ["Animation", "Drama", "Sci-Fi"],
+      "rating": 8.8,
+      "availability": ["Funimation"],
+      "image": "https://cdn.myanimelist.net/images/anime/1935/127974.jpg",
+      "synopsis": "A group of friends discover a way to change the past...",
+      "otherTitles": ["シュタインズ・ゲート"],
+      "actors": [
+        {
+          "name": "Actor E",
+          "picture": "actorE_image_link.jpg"
+        },
+        {
+          "name": "Actor F",
+          "picture": "actorF_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 4",
+          "date": "Sep 3, 2024",
+          "rating": "★★★★☆",
+          "text": "Complex, emotional, and exciting."
+        }
+      ]
     },
     {
-        "title": "Steins;Gate",
-        "year": "2011",
-        "genres": "Animation, Drama, Sci-Fi",
-        "rating": "8.8/10",
-        "views": "179234",
-        "image": "https://cdn.myanimelist.net/images/anime/1935/127974.jpg",
-        "country": "Japan"
+      "id": 5,
+      "title": "My Hero Academia",
+      "year": "2016",
+      "genres": ["Action", "Comedy", "Superhero"],
+      "rating": 8.7,
+      "availability": ["Crunchyroll"],
+      "image": "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
+      "synopsis": "In a world where superpowers are the norm, a boy dreams of being a hero...",
+      "otherTitles": ["Boku no Hero Academia"],
+      "actors": [
+        {
+          "name": "Actor G",
+          "picture": "actorG_image_link.jpg"
+        },
+        {
+          "name": "Actor H",
+          "picture": "actorH_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 5",
+          "date": "Sep 4, 2024",
+          "rating": "★★★★☆",
+          "text": "Fun and inspiring!"
+        }
+      ]
     },
     {
-        "title": "My Hero Academia",
-        "year": "2016",
-        "genres": "Action, Comedy, Superhero",
-        "rating": "8.7/10",
-        "views": "231456",
-        "image": "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
-        "country": "Japan"
+      "id": 6,
+      "title": "One Piece",
+      "year": "1999",
+      "genres": ["Action", "Adventure", "Fantasy"],
+      "rating": 8.6,
+      "availability": ["Funimation"],
+      "image": "https://cdn.myanimelist.net/images/anime/1244/138851.jpg",
+      "synopsis": "A pirate adventure of epic proportions...",
+      "otherTitles": ["Wan Pīsu"],
+      "actors": [
+        {
+          "name": "Actor I",
+          "picture": "actorI_image_link.jpg"
+        },
+        {
+          "name": "Actor J",
+          "picture": "actorJ_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 6",
+          "date": "Sep 5, 2024",
+          "rating": "★★★★★",
+          "text": "An unforgettable journey!"
+        }
+      ]
     },
     {
-        "title": "One Piece",
-        "year": "1999",
-        "genres": "Action, Adventure, Fantasy",
-        "rating": "8.6/10",
-        "views": "345678",
-        "image": "https://cdn.myanimelist.net/images/anime/1244/138851.jpg",
-        "country": "Japan"
+      "id": 7,
+      "title": "Naruto",
+      "year": "2002",
+      "genres": ["Action", "Adventure", "Fantasy"],
+      "rating": 8.5,
+      "availability": ["Crunchyroll"],
+      "image": "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
+      "synopsis": "A ninja boy seeks to become the strongest Hokage...",
+      "otherTitles": ["ナルト"],
+      "actors": [
+        {
+          "name": "Actor K",
+          "picture": "actorK_image_link.jpg"
+        },
+        {
+          "name": "Actor L",
+          "picture": "actorL_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 7",
+          "date": "Sep 6, 2024",
+          "rating": "★★★★☆",
+          "text": "A great blend of action and emotion."
+        }
+      ]
     },
     {
-        "title": "Naruto",
-        "year": "2002",
-        "genres": "Action, Adventure, Fantasy",
-        "rating": "8.5/10",
-        "views": "298765",
-        "image": "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
-        "country": "Japan"
+      "id": 8,
+      "title": "Cowboy Bebop",
+      "year": "1998",
+      "genres": ["Action", "Adventure", "Comedy"],
+      "rating": 8.5,
+      "availability": ["Hulu"],
+      "image": "https://cdn.myanimelist.net/images/anime/4/19644.jpg",
+      "synopsis": "A space cowboy and his crew take on bounties across the galaxy...",
+      "otherTitles": ["カウボーイビバップ"],
+      "actors": [
+        {
+          "name": "Actor M",
+          "picture": "actorM_image_link.jpg"
+        },
+        {
+          "name": "Actor N",
+          "picture": "actorN_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 8",
+          "date": "Sep 7, 2024",
+          "rating": "★★★★★",
+          "text": "Classic and iconic!"
+        }
+      ]
     },
     {
-        "title": "Cowboy Bebop",
-        "year": "1998",
-        "genres": "Action, Adventure, Comedy",
-        "rating": "8.5/10",
-        "views": "167890",
-        "image": "https://cdn.myanimelist.net/images/anime/4/19644.jpg",
-        "country": "Japan"
+      "id": 9,
+      "title": "Code Geass: Lelouch of the Rebellion",
+      "year": "2006",
+      "genres": ["Action", "Drama", "Mecha"],
+      "rating": 8.6,
+      "availability": ["Crunchyroll"],
+      "image": "https://cdn.myanimelist.net/images/anime/1032/135088.jpg",
+      "synopsis": "A young man gains the power of Geass to rebel against an oppressive empire...",
+      "otherTitles": ["Kōdo Giasu"],
+      "actors": [
+        {
+          "name": "Actor O",
+          "picture": "actorO_image_link.jpg"
+        },
+        {
+          "name": "Actor P",
+          "picture": "actorP_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 9",
+          "date": "Sep 8, 2024",
+          "rating": "★★★★★",
+          "text": "A story of betrayal and strategy."
+        }
+      ]
     },
     {
-        "title": "Code Geass: Lelouch of the Rebellion",
-        "year": "2006",
-        "genres": "Action, Drama, Mecha",
-        "rating": "8.6/10",
-        "views": "198765",
-        "image": "https://cdn.myanimelist.net/images/anime/1032/135088.jpg",
-        "country": "Japan"
-    },
-    {
-        "title": "Demon Slayer: Kimetsu no Yaiba",
-        "year": "2019",
-        "genres": "Action, Fantasy, Shounen",
-        "rating": "8.7/10",
-        "views": "345678",
-        "image": "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
-        "country": "Japan"
-    },
-    {
-        "title": "Hunter x Hunter",
-        "year": "2011",
-        "genres": "Action, Adventure, Fantasy",
-        "rating": "8.6/10",
-        "views": "199876",
-        "image": "https://cdn.myanimelist.net/images/anime/1337/99013.jpg",
-        "country": "Japan"
-    },
-    {
-        "title": "Your Name",
-        "year": "2016",
-        "genres": "Animation, Drama, Fantasy",
-        "rating": "8.9/10",
-        "views": "243567",
-        "image": "https://cdn.myanimelist.net/images/anime/5/87048.jpg",
-        "country": "Japan"
-    },
-    {
-        "title": "Spirited Away",
-        "year": "2001",
-        "genres": "Animation, Adventure, Fantasy",
-        "rating": "8.6/10",
-        "views": "189765",
-        "image": "https://cdn.myanimelist.net/images/anime/6/79597.jpg",
-        "country": "Japan"
+      "id": 10,
+      "title": "Neon Genesis Evangelion",
+      "year": "1995",
+      "genres": ["Action", "Drama", "Mecha"],
+      "rating": 8.3,
+      "availability": ["Netflix"],
+      "image": "https://cdn.myanimelist.net/images/anime/1304/115285.jpg",
+      "synopsis": "Teenagers must pilot giant mechs to protect Earth from mysterious invaders...",
+      "otherTitles": ["Shin Seiki Evangelion"],
+      "actors": [
+        {
+          "name": "Actor Q",
+          "picture": "actorQ_image_link.jpg"
+        },
+        {
+          "name": "Actor R",
+          "picture": "actorR_image_link.jpg"
+        }
+      ],
+      "trailer": "trailer_link_here",
+      "comments": [
+        {
+          "username": "User 10",
+          "date": "Sep 9, 2024",
+          "rating": "★★★★☆",
+          "text": "Mind-bending and deep."
+        }
+      ]
     }
-]
+  ]
+  

@@ -11,7 +11,7 @@ const Home = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [searchedTerm, setSearchedTerm] = useState(''); // State untuk keyword pencarian
+    const [searchedTerm, setSearchedTerm] = useState('');
     const [movies] = useState(moviesData);
     const navigate = useNavigate();
     
@@ -19,15 +19,18 @@ const Home = () => {
         setSidebarVisible(!isSidebarVisible);
     };
 
-    const handleDramaClick = () => {
-        navigate("/detail");
+    const handleDramaClick = (movie) => {
+        navigate(`/movie/${movie.id}`, { state: { movie } });
     };
+    
+    // const handleDramaClick = (movie) => {
+    //     navigate("/detail", { state: { movie } });
+    // };
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
 
-        // Jika input kosong, reset hasil pencarian dan searchedTerm
         if (value.trim() === '') {
             setSearchedTerm('');
             setSearchResults([]);
@@ -37,18 +40,17 @@ const Home = () => {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
 
-        // Cek jika searchTerm kosong
         if (searchTerm.trim() === '') {
             setSearchedTerm('');
             setSearchResults([]);
             return;
         }
 
-        // Set nilai searchedTerm saat submit
         setSearchedTerm(searchTerm);
 
-        // Filter hasil pencarian
-        const filteredResults = movies.filter(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        const filteredResults = movies.filter(item => 
+            item.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
         setSearchResults(filteredResults);
     };
 
@@ -60,18 +62,16 @@ const Home = () => {
                     toggleSidebar={toggleSidebar}
                 />
                 <main className="flex-1 p-6">
-                    <div class="flex items-center justify-between mb-4 md:justify-end">
-                        <button id="hamburger" class="p-2 text-gray-400 md:hidden focus:outline-none" onClick={toggleSidebar}>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <div className="flex items-center justify-between mb-4 md:justify-end">
+                        <button id="hamburger" className="p-2 text-gray-400 md:hidden" onClick={toggleSidebar}>
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
-                        <button id="login-button" type="button" class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        <button id="login-button" type="button" className="text-white bg-orange-600 hover:bg-orange-700 rounded-lg text-sm px-5 py-2.5">
                             Login
                         </button>
                     </div>
-
-
                     {/* Form Pencarian */}
                     <div className="flex justify-center mb-4">
                         <form className="flex items-center w-full max-w-lg" onSubmit={handleSearchSubmit}>
@@ -133,50 +133,49 @@ const Home = () => {
                         </section>
                     )}
 
-                    {/* Menampilkan konten default atau hasil pencarian */}
+                    {/* Search Results */}
                     {searchedTerm && searchResults.length > 0 ? (
-                        searchResults.map((item, index) => (
-                            <section className="grid max-w-4xl grid-cols-1 gap-4 p-6 mx-auto" key={index}>
+                        searchResults.map((movie, index) => (
+                            <section key={index} className="p-6">
                                 <SearchCard
-                                    title={item.title}
-                                    year={item.year}
-                                    genres={item.genres}
-                                    rating={item.rating}
-                                    views={item.views}
-                                    imageUrl={item.image}
-                                    onClick={handleDramaClick}
-                                />
-                            </section>
-                        ))
-                        ) : searchedTerm ? (
-                            // Tampilan ketika tidak ada hasil pencarian
-                            <div className="flex flex-col items-center justify-center mt-10">
-                                <p className="text-lg font-medium text-gray-400">
-                                    No results found for <span className="text-orange-600">"{searchedTerm}"</span>
-                                </p>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    Try searching with different keywords or check the spelling.
-                                </p>
-                            </div>
-                    ) : (
-                        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {movies.map((movie, index) => (
-                                <Card
-                                    key={index}
                                     title={movie.title}
                                     year={movie.year}
                                     genres={movie.genres}
                                     rating={movie.rating}
-                                    views={movie.views}
-                                    imageURL={movie.image}
-                                    onClick={handleDramaClick}
+                                    imageUrl={movie.image}
+                                    onClick={() => handleDramaClick(movie)}
                                 />
-                            ))}
-                        </section>
+                            </section>
+                        ))
+                    ) : searchedTerm ? (
+                    // Tampilan ketika tidak ada hasil pencarian
+                    <div className="flex flex-col items-center justify-center mt-10">
+                        <p className="text-center text-gray-400">
+                            No results for "{searchedTerm}"
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            Try searching with different keywords or check the spelling.
+                        </p>  
+                    </div>
+                    ) : (
+                    <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        {movies.map((movie, index) => (
+                            <Card
+                                key={index}
+                                title={movie.title}
+                                year={movie.year}
+                                genres={movie.genres}
+                                rating={movie.rating}
+                                views={movie.views}
+                                imageURL={movie.image}
+                                onClick={() => handleDramaClick(movie)} 
+                            />
+                        ))}
+                    </section>
                     )}
                 </main>
             </div>
-            <footer className="z-50 p-4 text-center text-gray-300 bg-gray-800">
+            <footer className="p-4 text-center bg-gray-800 text-gray-300">
                 <p>&copy; 2024 DramaKu. All rights reserved.</p>
             </footer>
         </div>
