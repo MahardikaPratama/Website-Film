@@ -1,8 +1,8 @@
 // Sidebar.js
 import React from "react";
-import { Link } from "react-router-dom";
 
-const Sidebar = ({ isVisible, toggleSidebar }) => {
+const Sidebar = ({ isVisible, toggleSidebar, onCountryFilter, currentFilter  }) => {
+
     return (
         <aside
             id="sidebar"
@@ -35,40 +35,40 @@ const Sidebar = ({ isVisible, toggleSidebar }) => {
                 </div>
                 <ul className="space-y-2">
                     <li>
-                        <Link
-                            to="/"
-                            className="flex items-center px-4 py-2 text-gray-300 bg-gray-700 rounded-md"
+                        <button
+                            onClick={() => onCountryFilter('')}
+                            className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter  === '' ? 'bg-gray-700' : 'hover:bg-gray-700'} w-full text-left`}                            
                         >
                             <i className="mr-4 fas fa-film"></i>
                             All Dramas
-                        </Link>
+                        </button>
                     </li>
                     <li>
-                        <Link
-                            to="/"
-                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                        <button
+                            onClick={() => onCountryFilter('Japan')}
+                            className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter  === 'Japan' ? 'bg-gray-700' : 'hover:bg-gray-700'} w-full text-left`}
                         >
                             <img src="https://media.istockphoto.com/id/537287287/id/vektor/bendera-jepang.jpg?s=612x612&w=0&k=20&c=BZEGVwtP918iV-Kw8J7DshVP8ZUvapxq47ezKz03LKU=" alt="Japan Flag" className="w-6 h-4 mr-2"/>
                             Japan
-                        </Link>
+                        </button>
                     </li>
                     <li>
-                        <Link
-                            to="/"
-                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                        <button
+                            onClick={() => onCountryFilter('China')}
+                            className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter  === 'China' ? 'bg-gray-700' : 'hover:bg-gray-700'} w-full text-left`}
                         >
                             <img src="https://media.istockphoto.com/id/537287169/id/vektor/bendera-cina.jpg?s=612x612&w=0&k=20&c=uGupXdzW8jt3glSFmZTO8dY9rdXHITdJHsgxeX6ryIU=" alt="China Flag" className="w-6 h-4 mr-2"/>
                             China
-                        </Link>
+                        </button>
                     </li>
                     <li>
-                        <Link
-                            to="/"
-                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                        <button
+                            onClick={() => onCountryFilter('Korea')}
+                            className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter  === 'Korea' ? 'bg-gray-700' : 'hover:bg-gray-700 bg-gray-800'} w-full text-left`}
                         >
                             <img src="https://media.istockphoto.com/id/1132287785/id/vektor/bendera-korea-selatan.jpg?s=612x612&w=0&k=20&c=7hymvujlLAAgdYiRc52VhLOeKBGM6Z6eJcjQNzc6fhI=" alt="Korea Flag" className="w-6 h-4 mr-2"/>
                             Korea
-                        </Link>
+                        </button>
                     </li>
                 </ul>
             </div>

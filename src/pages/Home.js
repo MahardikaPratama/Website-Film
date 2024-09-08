@@ -18,7 +18,22 @@ const Home = () => {
     // State untuk menyimpan term pencarian yang telah dikirim
     const [searchedTerm, setSearchedTerm] = useState('');
     // State untuk menyimpan data film
-    const [movies] = useState(moviesData);
+    const [movies, setMovies] = useState(moviesData);
+    // State untuk filter country
+    const [countryFilter, setCountryFilter] = useState('');
+
+    // State untuk filter dan sort options
+    const [filterOptions, setFilterOptions] = useState({
+        year: '',
+        genre: '',
+        status: '',
+        avaibility: '',
+        award: '',
+        country: ''
+    });
+    
+    const [sortOption, setSortOption] = useState('');
+
     // Hook untuk navigasi
     const navigate = useNavigate();
     
@@ -69,6 +84,82 @@ const Home = () => {
         setSearchResults(filteredResults);
     };
 
+    // Fungsi untuk menangani perubahan filter
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilterOptions(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleCountryFilter = (country) => {
+        setFilterOptions(prevState => ({
+            ...prevState,
+            country
+        }));
+    
+        // Apply the country filter based on updated filterOptions
+        let filteredMovies = [...moviesData];
+        if (country) {
+            filteredMovies = filteredMovies.filter(movie => movie.country === country);
+        }
+        setCountryFilter(country);
+        setMovies(filteredMovies);
+    };
+
+    // Fungsi untuk menangani perubahan sort
+    const handleSortChange = (e) => {
+        setSortOption(e.target.value);
+    };
+
+    // Fungsi untuk menerapkan filter dan sort saat tombol Submit diklik
+    const handleSubmitFilterSort = () => {
+        let filteredMovies = [...moviesData];
+
+        if (filterOptions.year) {
+            filteredMovies = filteredMovies.filter(movie => movie.year === filterOptions.year);
+        }
+        if (filterOptions.genre) {
+            filteredMovies = filteredMovies.filter(movie => movie.genres.includes(filterOptions.genre));
+        }
+        if (filterOptions.status) {
+            filteredMovies = filteredMovies.filter(movie => movie.status === filterOptions.status);
+        }
+        if (filterOptions.avaibility) {
+            filteredMovies = filteredMovies.filter(movie => movie.avaibility.includes(filterOptions.avaibility));
+        }
+        if (filterOptions.award) {
+            filteredMovies = filteredMovies.filter(movie => movie.award === filterOptions.award);
+        }
+
+        // Sort berdasarkan sortOption
+        switch (sortOption) {
+            case 'title-asc':
+                filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'title-desc':
+                filteredMovies.sort((a, b) => b.title.localeCompare(a.title));
+                break;
+            case 'rating-asc':
+                filteredMovies.sort((a, b) => a.rating - b.rating);
+                break;
+            case 'rating-desc':
+                filteredMovies.sort((a, b) => b.rating - a.rating);
+                break;
+            case 'year-asc':
+                filteredMovies.sort((a, b) => a.year - b.year);
+                break;
+            case 'year-desc':
+                filteredMovies.sort((a, b) => b.year - a.year);
+                break;
+            default:
+                break;
+        }
+
+        setMovies(filteredMovies);
+    };
+
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
             <div className="flex flex-col flex-1 md:flex-row">
@@ -76,6 +167,8 @@ const Home = () => {
                 <Sidebar
                     isVisible={isSidebarVisible}
                     toggleSidebar={toggleSidebar}
+                    onCountryFilter={handleCountryFilter}
+                    currentFilter={countryFilter}
                 />
                 <main className="flex-1 p-6">
                     {/* Header dengan tombol untuk toggle sidebar dan login */}
@@ -134,11 +227,14 @@ const Home = () => {
                     </div>
 
                     {/* Filter and Sort Options */}
-                    <FilterSortOptions />
+                    <FilterSortOptions 
+                        onFilterChange={handleFilterChange} 
+                        onSortChange={handleSortChange} 
+                    />
 
                     {/* Submit Button */}
                     <div className="flex justify-start mb-4">
-                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5" onClick={handleSubmitFilterSort}>
                             Submit
                         </button>
                     </div>
