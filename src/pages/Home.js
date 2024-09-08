@@ -3,29 +3,36 @@ import Sidebar from "../components/Sidebar";
 import Card from "../components/Card";
 import FilterSortOptions from "../components/FilterSortOptions";
 import SearchCard from "../components/SearchCard";
-import Footer from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import '../css/style.css';
 import moviesData from '../data/movies.json';
+import Footer from "../components/footer";
 
 const Home = () => {
+    // State untuk mengontrol visibilitas sidebar
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    // State untuk menyimpan nilai input pencarian
     const [searchTerm, setSearchTerm] = useState('');
+    // State untuk menyimpan hasil pencarian
     const [searchResults, setSearchResults] = useState([]);
-    const [searchedTerm, setSearchedTerm] = useState(''); 
+    // State untuk menyimpan term pencarian yang telah dikirim
+    const [searchedTerm, setSearchedTerm] = useState('');
+    // State untuk menyimpan data film
     const [movies] = useState(moviesData);
-    const [sortOption, setSortOption] = useState('title-asc');
-    const [showSortedResults, setShowSortedResults] = useState(false);
+    // Hook untuk navigasi
     const navigate = useNavigate();
     
+    // Fungsi untuk toggle visibilitas sidebar
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);
     };
 
+    // Fungsi untuk menangani klik pada card drama
     const handleDramaClick = () => {
         navigate("/detail");
     };
 
+    // Fungsi untuk menangani perubahan input pencarian
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
@@ -37,6 +44,7 @@ const Home = () => {
         }
     };
 
+    // Fungsi untuk menangani pengiriman form pencarian
     const handleSearchSubmit = (e) => {
         e.preventDefault();
 
@@ -50,61 +58,32 @@ const Home = () => {
         // Set nilai searchedTerm saat submit
         setSearchedTerm(searchTerm);
 
-        // Filter hasil pencarian
+        // Filter hasil pencarian berdasarkan title film
         const filteredResults = movies.filter(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()));
         setSearchResults(filteredResults);
     };
 
-    const handleSubmitClick = () => {
-        setShowSortedResults(true);
-    };
-    
-
-    const handleSortChange = (option) => {
-        setSortOption(option);
-    };
-
-    // Function to sort movies based on selected option
-    const sortMovies = (moviesList) => {
-        const sortedList = [...moviesList];
-        switch (sortOption) {
-            case 'title-asc':
-                return sortedList.sort((a, b) => a.title.localeCompare(b.title));
-            case 'title-desc':
-                return sortedList.sort((a, b) => b.title.localeCompare(a.title));
-            case 'year-asc':
-                return sortedList.sort((a, b) => a.year - b.year);
-            case 'year-desc':
-                return sortedList.sort((a, b) => b.year - a.year);
-            default:
-                return sortedList;
-        }
-    };
-    
-    let sortedResults = [];
-    if (showSortedResults) {
-        sortedResults = sortMovies(movies);
-    }
 
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
             <div className="flex flex-col flex-1 md:flex-row">
+                {/* Sidebar */}
                 <Sidebar
                     isVisible={isSidebarVisible}
                     toggleSidebar={toggleSidebar}
                 />
                 <main className="flex-1 p-6">
-                    <div class="flex items-center justify-between mb-4 md:justify-end">
-                        <button id="hamburger" class="p-2 text-gray-400 md:hidden focus:outline-none" onClick={toggleSidebar}>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    {/* Header dengan tombol untuk toggle sidebar dan login */}
+                    <div className="flex items-center justify-between mb-4 md:justify-end">
+                        <button id="hamburger" className="p-2 text-gray-400 md:hidden focus:outline-none" onClick={toggleSidebar}>
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
-                        <button id="login-button" type="button" class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        <button id="login-button" type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
                             Login
                         </button>
                     </div>
-
 
                     {/* Form Pencarian */}
                     <div className="flex justify-center mb-4">
@@ -150,11 +129,12 @@ const Home = () => {
                     </div>
 
                     {/* Filter and Sort Options */}
-                    <FilterSortOptions onSortChange={handleSortChange} />
+                    <FilterSortOptions />
 
                     {/* Submit Button */}
                     <div className="flex justify-start mb-4">
-                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5" onClick={handleSubmitClick}>Submit
+                        <button type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                            Submit
                         </button>
                     </div>
 
@@ -167,24 +147,6 @@ const Home = () => {
                         </section>
                     )}
 
-                    {/* Tampilkan sortedResults hanya setelah tombol Submit diklik */}
-                    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    {showSortedResults && (
-                        sortedResults.map((item, index) => (
-                                <Card
-                                    key={index}
-                                    title={item.title}
-                                    year={item.year}
-                                    genres={item.genres}
-                                    rating={item.rating}
-                                    views={item.views}
-                                    imageURL={item.image}
-                                    onClick={handleDramaClick}
-                                />
-                        ))
-                    )}
-                    </section>
-
                     {/* Menampilkan konten default atau hasil pencarian */}
                     {searchedTerm && searchResults.length > 0 ? (
                         searchResults.map((item, index) => (
@@ -195,7 +157,8 @@ const Home = () => {
                                     genres={item.genres}
                                     rating={item.rating}
                                     views={item.views}
-                                    imageUrl={item.image}
+                                    imageUrl={item.coverImage}
+                                    status={item.status}
                                     onClick={handleDramaClick}
                                 />
                             </section>
@@ -210,7 +173,8 @@ const Home = () => {
                                     Try searching with different keywords or check the spelling.
                                 </p>
                             </div>
-                    ) : !showSortedResults && (
+                    ) : (
+                        // Tampilan default jika tidak ada pencarian
                         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                             {movies.map((movie, index) => (
                                 <Card
@@ -220,7 +184,8 @@ const Home = () => {
                                     genres={movie.genres}
                                     rating={movie.rating}
                                     views={movie.views}
-                                    imageURL={movie.image}
+                                    imageURL={movie.coverImage}
+                                    status={movie.status}
                                     onClick={handleDramaClick}
                                 />
                             ))}

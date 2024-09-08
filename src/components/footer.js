@@ -1,12 +1,8 @@
-// src/components/Footer.js
 import React from 'react';
-import '@fortawesome/fontawesome-free/css/all.min.css'; 
 
 const Footer = () => {
     return (
-        <footer
-            className="z-50 p-4 text-center text-gray-300 bg-gray-800"
-        >
+        <footer className="z-50 p-4 text-center text-gray-300 bg-gray-800">
             <div className="container mx-auto">
                 <p>&copy; 2024 DramaKu. All rights reserved.</p>
                 <div className="flex justify-center mt-2 space-x-4">

@@ -29,30 +29,45 @@ const Sidebar = ({ isVisible, toggleSidebar }) => {
                         ></path>
                     </svg>
                 </button>
-                <h2 className="mb-4 text-2xl text-white font-bold">DramaKu</h2>
+                <div className="flex items-center mb-4">
+                    <img src="https://i.pinimg.com/originals/2c/ae/fe/2caefe0fe73204830ee22868604390d5.png" alt="DramaKu Logo" className="w-8 h-8 mr-2 bg-white border rounded-full"/>
+                    <h2 className="text-2xl font-bold text-white">DramaKu</h2>
+                </div>
                 <ul className="space-y-2">
                     <li>
                         <Link
                             to="/"
-                            className="block px-4 py-2 text-gray-300 bg-gray-700 rounded-md"
+                            className="flex items-center px-4 py-2 text-gray-300 bg-gray-700 rounded-md"
                         >
+                            <i className="mr-4 fas fa-film"></i>
+                            All Dramas
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/"
+                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                        >
+                            <img src="https://media.istockphoto.com/id/537287287/id/vektor/bendera-jepang.jpg?s=612x612&w=0&k=20&c=BZEGVwtP918iV-Kw8J7DshVP8ZUvapxq47ezKz03LKU=" alt="Japan Flag" className="w-6 h-4 mr-2"/>
                             Japan
                         </Link>
                     </li>
                     <li>
                         <Link
                             to="/"
-                            className="block px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
                         >
-                            Korea
+                            <img src="https://media.istockphoto.com/id/537287169/id/vektor/bendera-cina.jpg?s=612x612&w=0&k=20&c=uGupXdzW8jt3glSFmZTO8dY9rdXHITdJHsgxeX6ryIU=" alt="China Flag" className="w-6 h-4 mr-2"/>
+                            China
                         </Link>
                     </li>
                     <li>
                         <Link
                             to="/"
-                            className="block px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
+                            className="flex items-center px-4 py-2 text-gray-300 rounded-md hover:bg-gray-700"
                         >
-                            China
+                            <img src="https://media.istockphoto.com/id/1132287785/id/vektor/bendera-korea-selatan.jpg?s=612x612&w=0&k=20&c=7hymvujlLAAgdYiRc52VhLOeKBGM6Z6eJcjQNzc6fhI=" alt="Korea Flag" className="w-6 h-4 mr-2"/>
+                            Korea
                         </Link>
                     </li>
                 </ul>
