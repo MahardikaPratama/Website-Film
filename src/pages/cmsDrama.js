@@ -4,7 +4,7 @@ import FilterAdmin from '../components/FilterAdmin';
 import PaginationAdmin from '../components/PaginationAdmin'; 
 import PopupDrama from '../components/PopupDrama'; 
 import Footer from "../components/footer";
-import '../css/modal.css';
+import '../css/comment.css';
 
 const CmsDrama = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -88,8 +88,9 @@ const CmsDrama = () => {
                             onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
                         />
                     </section>
-                    {/* PopupDrama Component */}
-                    <PopupDrama isVisible={isModalVisible} hideModal={hideModal} />
+                    <section>
+                        <PopupDrama isVisible={isModalVisible} hideModal={hideModal} />
+                    </section>
                 </main>
             </div>
             {/* Footer Component */}

@@ -15,7 +15,7 @@ import CmsComment from './pages/cmsComment';
 import CmsUsers from './pages/cmsUsers';
 import CmsDramaInput from './pages/cmsDramaInput';
 import './css/index.css';
-import '../src/css/modal.css';
+import '../src/css/comment.css';
 
 function App() {
   return (
