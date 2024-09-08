@@ -1,6 +1,6 @@
 import React from "react";
 
-const Card = ({ title, year, genres, rating, views, imageURL, status }) => {
+const Card = ({ title, year, genres, rating, views, imageURL, status, onClick }) => {
     const genresString = genres.join(', ');
 
     let statusColor;
@@ -20,7 +20,10 @@ const Card = ({ title, year, genres, rating, views, imageURL, status }) => {
     }
 
     return (
-        <div className="p-4 transition transform bg-gray-800 rounded-lg shadow list-drama hover:scale-105 hover:bg-gray-700 hover:shadow-lg">
+        <div 
+            className="p-4 transition transform bg-gray-800 rounded-lg shadow list-drama hover:scale-105 hover:bg-gray-700 hover:shadow-lg cursor-pointer"
+            onClick={onClick} // Add click handler here
+        >
             <div className={`absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-xs font-bold text-white ${statusColor} rounded-md`}>
                 {status}
             </div>

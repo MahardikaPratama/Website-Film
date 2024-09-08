@@ -5,7 +5,7 @@ import FilterSortOptions from "../components/FilterSortOptions";
 import SearchCard from "../components/SearchCard";
 import { useNavigate } from "react-router-dom";
 import '../css/style.css';
-import moviesData from '../data/movies.json';
+import moviesData from '../data/movies.json'; 
 import Footer from "../components/footer";
 
 const Home = () => {
@@ -28,8 +28,14 @@ const Home = () => {
     };
 
     // Fungsi untuk menangani klik pada card drama
-    const handleDramaClick = () => {
-        navigate("/detail");
+    const handleDramaClick = (id) => {
+        console.log("Navigating to Detail Page with ID:", id);
+        navigate(`/detail/${id}`);
+    };
+
+    // Fungsi untuk menangani button login
+    const handleLoginClick = () => {
+        navigate("/login");
     };
 
     // Fungsi untuk menangani perubahan input pencarian
@@ -63,7 +69,6 @@ const Home = () => {
         setSearchResults(filteredResults);
     };
 
-
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
             <div className="flex flex-col flex-1 md:flex-row">
@@ -77,10 +82,10 @@ const Home = () => {
                     <div className="flex items-center justify-between mb-4 md:justify-end">
                         <button id="hamburger" className="p-2 text-gray-400 md:hidden focus:outline-none" onClick={toggleSidebar}>
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
-                        <button id="login-button" type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                        <button onClick={handleLoginClick} id="login-button" type="button" className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
                             Login
                         </button>
                     </div>
@@ -159,20 +164,20 @@ const Home = () => {
                                     views={item.views}
                                     imageUrl={item.coverImage}
                                     status={item.status}
-                                    onClick={handleDramaClick}
+                                    onClick={() => handleDramaClick(item.id)} 
                                 />
                             </section>
                         ))
-                        ) : searchedTerm ? (
-                            // Tampilan ketika tidak ada hasil pencarian
-                            <div className="flex flex-col items-center justify-center mt-10">
-                                <p className="text-lg font-medium text-gray-400">
-                                    No results found for <span className="text-orange-600">"{searchedTerm}"</span>
-                                </p>
-                                <p className="mt-2 text-sm text-gray-500">
-                                    Try searching with different keywords or check the spelling.
-                                </p>
-                            </div>
+                    ) : searchedTerm ? (
+                        // Tampilan ketika tidak ada hasil pencarian
+                        <div className="flex flex-col items-center justify-center mt-10">
+                            <p className="text-lg font-medium text-gray-400">
+                                No results found for <span className="text-orange-600">"{searchedTerm}"</span>
+                            </p>
+                            <p className="mt-2 text-sm text-gray-500">
+                                Try searching with different keywords or check the spelling.
+                            </p>
+                        </div>
                     ) : (
                         // Tampilan default jika tidak ada pencarian
                         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -186,7 +191,7 @@ const Home = () => {
                                     views={movie.views}
                                     imageURL={movie.coverImage}
                                     status={movie.status}
-                                    onClick={handleDramaClick}
+                                    onClick={() => handleDramaClick(movie.id)}  
                                 />
                             ))}
                         </section>
