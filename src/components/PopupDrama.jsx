@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'; 
 
 const PopupDrama = ({ isVisible, hideModal }) => {
-    // Conditional className based on visibility
     const modalClass = isVisible ? 'block' : 'hidden';
     const carouselRef = useRef(null);
 
@@ -20,24 +19,28 @@ const PopupDrama = ({ isVisible, hideModal }) => {
 
     return (
         <div id="movieApprovalModal" className={`fixed inset-0 items-start justify-center bg-black bg-opacity-50 z-[9999] overflow-y-auto ${modalClass}`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            {/* Background backdrop */}
             <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
-
             <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                 <div className="flex items-center justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
                     <div className="relative overflow-hidden text-left transition-all transform bg-gray-900 rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-3xl">
                         <button
-                            className="absolute top-4 right-4 text-2xl text-white"
+                            className="absolute text-2xl text-white top-4 right-4"
                             onClick={hideModal}
                         >
                             &times;
                         </button>
                         <div className="modal-header">
                             <div className="flex justify-center gap-5 mt-4">
-                                <button className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                                <button 
+                                    className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5"
+                                    onClick={hideModal}
+                                >
                                     Approve
                                 </button>
-                                <button className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                                <button 
+                                    className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5" 
+                                    onClick={hideModal}
+                                >
                                     Delete
                                 </button>
                             </div>
@@ -72,13 +75,13 @@ const PopupDrama = ({ isVisible, hideModal }) => {
                                 <div className="relative">
                                     {/* Scroll buttons */}
                                     <button
-                                        className="absolute left-0 p-2 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700 z-20"
+                                        className="absolute left-0 z-20 p-2 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700"
                                         onClick={scrollLeft}
                                     >
                                         <FontAwesomeIcon icon={faArrowLeft} />
                                     </button>
                                     <button
-                                        className="absolute right-0 p-2 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700 z-20"
+                                        className="absolute right-0 z-20 p-2 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700"
                                         onClick={scrollRight}
                                     >
                                         <FontAwesomeIcon icon={faArrowRight} />
@@ -87,7 +90,7 @@ const PopupDrama = ({ isVisible, hideModal }) => {
 
                                     <div
                                         ref={carouselRef}
-                                        className="flex py-2 px-2 space-x-4 overflow-x-hidden"
+                                        className="flex px-2 py-2 space-x-4 overflow-x-hidden"
                                         style={{ transform: `translateX(${scrollPosition}px)` }}
                                     >
                                         <div className="flex-none w-32">
