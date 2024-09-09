@@ -73,7 +73,7 @@ const DetailPage = () => {
                             {/* Scroll buttons */}
                             <button 
                                 onClick={scrollLeft} 
-                                className="absolute left-0 p-2 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700 mr-4"
+                                className="absolute left-0 p-2 mr-4 text-white transform -translate-y-1/2 bg-gray-800 rounded-full shadow-md top-1/2 hover:bg-gray-700"
                             >
                                 <FontAwesomeIcon icon={faArrowLeft}/>
                             </button>
@@ -106,8 +106,8 @@ const DetailPage = () => {
                     </div>
 
                     {/* Video Section */}
-                    <div className="flex items-center justify-center mt-10 bg-gray-200 h-96">
-                        <div className="w-full h-full">
+                    <div className="flex items-center justify-center mt-10 bg-gray-200">
+                        <div className="w-full" style={{ maxWidth: '1280px', aspectRatio: '16/9' }}>
                             <iframe 
                                 className="w-full h-full" 
                                 src={movie['link trailer']} 
