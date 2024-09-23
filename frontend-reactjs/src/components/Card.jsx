@@ -1,17 +1,16 @@
 import React from "react";
 
 const Card = ({ title, year, genres, rating, views, imageURL, status, onClick }) => {
-    const genresString = genres.join(', ');
 
     let statusColor;
     switch (status) {
-        case 'ongoing':
+        case 'ONGOING':
             statusColor = 'bg-green-600';
             break;
-        case 'completed':
+        case 'COMPLETED':
             statusColor = 'bg-blue-600';
             break;
-        case 'upcoming':
+        case 'UPCOMING':
             statusColor = 'bg-red-600';
             break;
         default:
@@ -21,7 +20,7 @@ const Card = ({ title, year, genres, rating, views, imageURL, status, onClick })
 
     return (
         <div 
-            className="p-4 transition transform bg-gray-800 rounded-lg shadow list-drama hover:scale-105 hover:bg-gray-700 hover:shadow-lg cursor-pointer"
+            className="p-4 transition transform bg-gray-800 rounded-lg shadow cursor-pointer list-drama hover:scale-105 hover:bg-gray-700 hover:shadow-lg"
             onClick={onClick} // Add click handler here
         >
             <div className={`absolute top-0 right-0 px-2 py-1 mt-2 mr-2 text-xs font-bold text-white ${statusColor} rounded-md`}>
@@ -34,7 +33,7 @@ const Card = ({ title, year, genres, rating, views, imageURL, status, onClick })
             />
             <h3 className="text-lg font-bold text-white">{title}</h3>
             <p className="text-gray-400">{year}</p>
-            <p className="text-gray-400">{genresString}</p>
+            <p className="text-gray-400">{genres}</p>
             <div className="flex items-center justify-between">
                 <p className="text-gray-400">Rate {rating}/10</p>
                 <p className="text-sm text-gray-500">{views} views</p>

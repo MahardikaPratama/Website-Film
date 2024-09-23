@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DropdownSearch from './DropdownSearch';
 
 const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
     const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -9,6 +10,28 @@ const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
 
     const handleClearFilterButtonClick = () => {
         setIsFilterVisible(false);
+        onFilterChange({ target: { name: 'year', value: '' } });
+        onFilterChange({ target: { name: 'genre', value: '' } });
+        onFilterChange({ target: { name: 'status', value: '' } });
+        onFilterChange({ target: { name: 'availability', value: '' } });
+        onFilterChange({ target: { name: 'award', value: '' } });
+        onSortChange({ target: { name: 'sort', value: '' } });
+    };
+
+    const filterOptions = {
+        year: [...Array(25).keys()].map(i => 2000 + i),
+        genre: ["Action", "Adventure", "Comedy", "Crime", "Drama", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi", "Slice of Life", "Thriller", "War", "Western", "Mystery", "Documentary"],
+        status: ["Ongoing", "Completed", "Upcoming"],
+        availability: ["Netflix", "Iqiyi", "Crunchyroll"],
+        award: ["Awarded", "Not Awarded"],
+        sort: [
+            { value: "title-asc", label: "Alphabetical (A-Z)" },
+            { value: "title-desc", label: "Alphabetical (Z-A)" },
+            { value: "rating-asc", label: "Rating (Low to High)" },
+            { value: "rating-desc", label: "Rating (High to Low)" },
+            { value: "year-asc", label: "Year (Old to New)" },
+            { value: "year-desc", label: "Year (New to Old)" }
+        ]
     };
 
     return (
@@ -36,72 +59,51 @@ const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
                 <div className="flex flex-col w-full space-y-2 lg:flex-row lg:items-center lg:space-x-2 lg:w-auto">
                     <span className="w-1/3 text-gray-300">Filtered by:</span>
                     <div className="grid w-full grid-cols-2 gap-2 lg:flex lg:space-x-2">
-                        <select 
-                            className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                            name="year" 
+                        {/* Dropdown Year */}
+                        <DropdownSearch
+                            label="Year"
+                            options={filterOptions.year}
                             onChange={onFilterChange}
-                        >
-                            <option value="">Year</option>
-                            {[...Array(25).keys()].map(i => {
-                                const year = 2000 + i;
-                                return <option key={year} value={year}>{year}</option>;
-                            })}
-                        </select>
-                        <select 
-                            className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                            name="genre" 
+                            name="year"
+                        />
+                        {/* Dropdown Genre */}
+                        <DropdownSearch
+                            label="Genre"
+                            options={filterOptions.genre}
                             onChange={onFilterChange}
-                        >
-                            <option value="">Genre</option>
-                            {["Action", "Adventure", "Comedy", "Crime", "Drama", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi", "Slice of Life", "Thriller", "War", "Western", "Mystery", "Documentary"].map(genre => (
-                                <option key={genre} value={genre}>{genre}</option>
-                            ))}
-                        </select>
-                        <select 
-                            className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                            name="status" 
+                            name="genre"
+                        />
+                        {/* Dropdown Status */}
+                        <DropdownSearch
+                            label="Status"
+                            options={filterOptions.status}
                             onChange={onFilterChange}
-                        >
-                            <option value="">Status</option>
-                            <option value="ongoing">Ongoing</option>
-                            <option value="completed">Completed</option>
-                            <option value="upcoming">Upcoming</option>
-                        </select>
-                        <select 
-                            className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                            name="avaibility" 
+                            name="status"
+                        />
+                        {/* Dropdown Availability */}
+                        <DropdownSearch
+                            label="Availability"
+                            options={filterOptions.availability}
                             onChange={onFilterChange}
-                        >
-                            <option value="">Availability</option>
-                            <option value="Netflix">Netflix</option>
-                            <option value="Iqiyi">Iqiyi</option>
-                            <option value="Crunchyroll">Crunchyroll</option>
-                        </select>
-                        <select 
-                            className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                            name="award" 
+                            name="availability"
+                        />
+                        {/* Dropdown Award */}
+                        <DropdownSearch
+                            label="Award"
+                            options={filterOptions.award}
                             onChange={onFilterChange}
-                        >
-                            <option value="">Award</option>
-                            <option value="Awarded">Awarded</option>
-                            <option value="Not Awarded">Not Awarded</option>
-                        </select>
+                            name="award"
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col w-full space-y-2 lg:flex-row lg:items-center lg:space-x-2 lg:w-auto">
                     <span className="text-gray-300">Sorted by:</span>
-                    <select 
-                        className="bg-gray-800 border border-gray-700 text-gray-300 text-sm rounded-lg p-2.5 hover:bg-gray-700 w-full lg:w-auto"
-                        name="sort" 
+                    <DropdownSearch
+                        label="Sort"
+                        options={filterOptions.sort.map(option => option.label)}
                         onChange={onSortChange}
-                    >
-                        <option value="title-asc">Alphabetical (A-Z)</option>
-                        <option value="title-desc">Alphabetical (Z-A)</option>
-                        <option value="rating-asc">Rating (Low to High)</option>
-                        <option value="rating-desc">Rating (High to Low)</option>
-                        <option value="year-asc">Year (Old to New)</option>
-                        <option value="year-desc">Year (New to Old)</option>
-                    </select>
+                        name="sort"
+                    />
                 </div>
             </div>
 

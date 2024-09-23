@@ -1,0 +1,46 @@
+const Actor = require('../models/actor');
+
+exports.getAllActors = async (req, res) => {
+    try {
+        const actors = await Actor.getAll();
+        res.json(actors);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+exports.getActorById = async (req, res) => {
+    try {
+        const actor = await Actor.getById(req.params.id);
+        res.json(actor);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+exports.createActor = async (req, res) => {
+    try {
+        const actor = await Actor.create(req.body);
+        res.status(201).json(actor);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+exports.updateActor = async (req, res) => {
+    try {
+        const actor = await Actor.update(req.params.id, req.body);
+        res.json(actor);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+exports.deleteActor = async (req, res) => {
+    try {
+        const result = await Actor.delete(req.params.id);
+        res.status(204).json(result);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback  } from "react";
-import PaginationHome from '../components/PaginationHome';
+import React, { useState, useEffect } from "react";
+import PaginationHome from './PaginationHome';
 import SidebarNavbar from "../components/SidebarNavbar";
 import Card from "../components/Card";
 import FilterSortOptions from "../components/FilterSortOptions";
@@ -9,9 +9,8 @@ import "../css/style.css";
 import moviesData from "../data/movies.json";
 import Footer from "../components/footer";
 import Carousel from "../components/Carousel";
-import MovieDataService from "../services/movie.services";
 
-function Home() {
+function temp() {
     // State untuk menyimpan nilai input pencarian
     const [searchTerm, setSearchTerm] = useState('');
     // State untuk menyimpan hasil pencarian
@@ -22,9 +21,6 @@ function Home() {
     const [movies, setMovies] = useState(moviesData);
     // State untuk filter country
     const [countryFilter, setCountryFilter] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalEntries, setTotalEntries] = useState(0);
-    const [entriesPerPage] = useState(10);
 
     // State untuk filter dan sort options
     const [filterOptions, setFilterOptions] = useState({
@@ -40,21 +36,6 @@ function Home() {
 
     // Hook untuk navigasi
     const navigate = useNavigate();
-
-    const fetchMovies = async () => {
-        try {
-            const response = await MovieDataService.getAllMovies(currentPage, entriesPerPage);
-            setMovies(response.data); 
-            setTotalEntries(response.totalEntries); // Update this to match your API's response structure
-        } catch (error) {
-            console.error("Error fetching movies:", error);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchMovies(); // Fetch movies on component mount and page change
-    }, [currentPage, entriesPerPage]);
 
     // Fungsi untuk menangani klik pada card drama
     const handleDramaClick = (id) => {
@@ -74,42 +55,24 @@ function Home() {
         }
     };
 
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-
-        if (searchedTerm) {
-            handleSearchSubmit(new Event("submit")); // Trigger submit untuk memanggil API
-        } else {
-            // Fetch movies without search if there's no searchedTerm
-            fetchMovies();
-        }
-    };
-
     // Fungsi untuk menangani pengiriman form pencarian
-    const handleSearchSubmit = async (e) => {
+    const handleSearchSubmit = (e) => {
         e.preventDefault();
-    
+
         // Cek jika searchTerm kosong
         if (searchTerm.trim() === '') {
             setSearchedTerm('');
             setSearchResults([]);
             return;
         }
-    
+
         // Set nilai searchedTerm saat submit
         setSearchedTerm(searchTerm);
-    
-        try {
-            // Panggil API untuk mencari film berdasarkan searchTerm
-            const response = await MovieDataService.searchMovies(searchTerm, currentPage, entriesPerPage);
-            setSearchResults(response.data); // Set hasil pencarian dengan data yang diambil dari API
-            setTotalEntries(response.totalEntries);
-        } catch (error) {
-            console.error("Error fetching search results:", error);
-            setSearchResults([]); // Jika terjadi error, reset hasil pencarian
-        }
-    };    
+
+        // Filter hasil pencarian berdasarkan title film
+        const filteredResults = movies.filter(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        setSearchResults(filteredResults);
+    };
 
     // Fungsi untuk menangani perubahan filter
     const handleFilterChange = (e) => {
@@ -141,9 +104,9 @@ function Home() {
     };
 
     // Fungsi untuk menerapkan filter dan sort saat tombol Submit diklik
-    const handleSubmitFilterSort = useCallback(() => {
+    const handleSubmitFilterSort = () => {
         let filteredMovies = [...moviesData];
-
+    
         if (filterOptions.year) {
             filteredMovies = filteredMovies.filter(movie => movie.year === parseInt(filterOptions.year));
         }
@@ -159,7 +122,8 @@ function Home() {
         if (filterOptions.award) {
             filteredMovies = filteredMovies.filter(movie => movie.award === filterOptions.award);
         }
-
+    
+        // Sort berdasarkan sortOption
         switch (sortOption) {
             case 'title-asc':
                 filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
@@ -182,13 +146,13 @@ function Home() {
             default:
                 break;
         }
-
+    
         setMovies(filteredMovies);
-    }, [filterOptions, sortOption]);
+    };
 
     useEffect(() => {
         handleSubmitFilterSort();
-    }, [filterOptions, sortOption, handleSubmitFilterSort]);
+    }, [filterOptions, sortOption]);
 
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
@@ -225,11 +189,11 @@ function Home() {
                                     title={item.title}
                                     year={item.year}
                                     genres={item.genres}
-                                    rating={item.movie_rate}
+                                    rating={item.rating}
                                     views={item.views}
-                                    imageUrl={item.poster_url}
-                                    status={item.release_status}
-                                    onClick={() => handleDramaClick(item.movie_id)} />
+                                    imageUrl={item.coverImage}
+                                    status={item.status}
+                                    onClick={() => handleDramaClick(item.id)} />
                             </section>
                         ))
                     ) : searchedTerm ? (
@@ -245,27 +209,20 @@ function Home() {
                     ) : (
                         // Tampilan default jika tidak ada pencarian
                         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {movies.map((movie) => (
+                            {movies.map((movie, index) => (
                                 <Card
-                                    key={movie.movie_id} 
+                                    key={index}
                                     title={movie.title}
                                     year={movie.year}
                                     genres={movie.genres}
-                                    rating={movie.movie_rate}
+                                    rating={movie.rating}
                                     views={movie.views}
-                                    imageURL={movie.poster_url}
-                                    status={movie.release_status}
-                                    onClick={() => handleDramaClick(movie.movie_id)} />
+                                    imageURL={movie.coverImage}
+                                    status={movie.status}
+                                    onClick={() => handleDramaClick(movie.id)} />
                             ))}
-
                         </section>
                     )}
-                    <PaginationHome
-                        currentPage={currentPage}
-                        totalEntries={totalEntries}
-                        entriesPerPage={entriesPerPage}
-                        onPageChange={handlePageChange}
-                        />
                 </main>
             </div>
             <Footer />
@@ -273,4 +230,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default temp;
