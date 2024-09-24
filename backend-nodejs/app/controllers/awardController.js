@@ -1,6 +1,6 @@
 const Award = require('../models/award');
 
-exports.getAllAwards = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const awards = await Award.getAll();
         res.json(awards);
@@ -9,7 +9,7 @@ exports.getAllAwards = async (req, res) => {
     }
 };
 
-exports.getAwardById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const award = await Award.getById(req.params.id);
         res.json(award);
@@ -18,7 +18,7 @@ exports.getAwardById = async (req, res) => {
     }
 }
 
-exports.createAward = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const award = await Award.create(req.body);
         res.status(201).json(award);
@@ -27,7 +27,7 @@ exports.createAward = async (req, res) => {
     }
 };
 
-exports.updateAward = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const award = await Award.update(req.params.id, req.body);
         res.json(award);
@@ -36,7 +36,7 @@ exports.updateAward = async (req, res) => {
     }
 };
 
-exports.deleteAward = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Award.delete(req.params.id);
         res.status(204).json(result);

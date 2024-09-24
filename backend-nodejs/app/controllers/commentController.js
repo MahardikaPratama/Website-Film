@@ -1,6 +1,6 @@
 const Comment = require('../models/comment');
 
-exports.getAllComments = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const comments = await Comment.getAll();
         res.json(comments);
@@ -9,7 +9,7 @@ exports.getAllComments = async (req, res) => {
     }
 };
 
-exports.getCommentById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const comment = await Comment.getById(req.params.id);
         res.json(comment);
@@ -18,7 +18,7 @@ exports.getCommentById = async (req, res) => {
     }
 };
 
-exports.createComment = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const comment = await Comment.create(req.body);
         res.status(201).json(comment);
@@ -27,7 +27,7 @@ exports.createComment = async (req, res) => {
     }
 };
 
-exports.updateComment = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const comment = await Comment.update(req.params.id, req.body);
         res.json(comment);
@@ -36,7 +36,7 @@ exports.updateComment = async (req, res) => {
     }
 };
 
-exports.deleteComment = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Comment.delete(req.params.id);
         res.status(204).json(result);

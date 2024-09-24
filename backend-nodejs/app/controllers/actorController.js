@@ -1,6 +1,6 @@
 const Actor = require('../models/actor');
 
-exports.getAllActors = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const actors = await Actor.getAll();
         res.json(actors);
@@ -9,7 +9,7 @@ exports.getAllActors = async (req, res) => {
     }
 };
 
-exports.getActorById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const actor = await Actor.getById(req.params.id);
         res.json(actor);
@@ -18,7 +18,7 @@ exports.getActorById = async (req, res) => {
     }
 };
 
-exports.createActor = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const actor = await Actor.create(req.body);
         res.status(201).json(actor);
@@ -27,7 +27,7 @@ exports.createActor = async (req, res) => {
     }
 };
 
-exports.updateActor = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const actor = await Actor.update(req.params.id, req.body);
         res.json(actor);
@@ -36,7 +36,7 @@ exports.updateActor = async (req, res) => {
     }
 };
 
-exports.deleteActor = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Actor.delete(req.params.id);
         res.status(204).json(result);

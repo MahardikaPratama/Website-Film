@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import countryDataService from "../services/country.service";
+import CountryButton from "./CountryButton";
 
-const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchTerm, onSearchChange }) => {
+const SidebarNavbar = ({ onCountryFilter, currentFilter, searchTerm, onSearchChange }) => {
     const [isSidebarOpen, setSidebarOpen] = useState(false); // State untuk membuka/menutup sidebar
     const [isLoggedIn, setIsLoggedIn] = useState(true); // State untuk login status
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State untuk membuka/menutup dropdown
+    const [countries, setCountries] = useState([]); // State untuk menyimpan data negara
 
     const navigate = useNavigate(); // Hook untuk navigasi
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+    
+    const fetchCountries = useCallback(async () => {
+        try {
+            const response = await countryDataService.getAll();
+            console.log("Fetched countries:", response.data);
+            setCountries(response.data);
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    }, []);    
+    
+
+    useEffect(() => {
+        fetchCountries();
+    }, [fetchCountries]);
     
     const handleProfileClick = () => {
         if (!isLoggedIn) {
@@ -19,7 +37,7 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
     };
 
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-    const handleLogin = () => setIsLoggedIn(true); 
+    const handleLogin = () => setIsLoggedIn(true);
 
     return (
         <>
@@ -60,7 +78,7 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
 
                         {/* Search Bar for Desktop */}
                         <div className="relative items-center hidden w-full max-w-md mx-5 md:flex">
-                            <form onSubmit={onSearchSubmit} className="relative w-full">
+                            <form  className="relative w-full">
                                 <input
                                     type="text"
                                     value={searchTerm}
@@ -69,16 +87,10 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
                                     placeholder="Search Movie..."
                                 />
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                     </svg>
                                 </div>
-                                <button
-                                    type="submit"
-                                    className="absolute px-4 py-2 text-sm font-medium text-white transform -translate-y-1/2 bg-orange-600 rounded-lg right-2 top-1/2 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300"
-                                >
-                                    Search
-                                </button>
                             </form>
                         </div>
 
@@ -134,7 +146,7 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
                 <div className="h-full px-3 pb-4 overflow-y-auto">
                     {/* Search Form in Sidebar for Mobile */}
                     <div className="relative mt-3 md:hidden"> {/* Hidden on desktop */}
-                        <form onSubmit={onSearchSubmit}>
+                        <form >
                             <input
                                 type="text"
                                 value={searchTerm} 
@@ -143,16 +155,11 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
                                 placeholder="Search..."
                             />
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
+                            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+
                             </div>
-                            <button
-                                type="submit"
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-orange-600 hover:bg-orange-700 text-white focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-xs px-3 py-1.5"
-                            >
-                                Search
-                            </button>
                         </form>
                     </div>
 
@@ -168,39 +175,16 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, onSearchSubmit, searchT
                                 All Dramas
                             </button>
                         </li>
-                        <li>
-                            <button
-                                onClick={() => onCountryFilter('Japan')}
-                                className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${
-                                    currentFilter === 'Japan' ? 'bg-gray-700' : 'hover:bg-gray-700'
-                                } w-full text-left`}
-                            >
-                                <img
-                                    src="https://media.istockphoto.com/id/537287287/id/vektor/bendera-jepang.jpg?s=612x612&w=0&k=20&c=BZEGVwtP918iV-Kw8J7DshVP8ZUvapxq47ezKz03LKU="
-                                    alt="Japan Flag"
-                                    className="w-6 h-4 mr-2"
-                                />
-                                Japan
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => onCountryFilter('China')}
-                                className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter === 'China' ? 'bg-gray-700' : 'hover:bg-gray-700'} w-full text-left`}
-                            >
-                                <img src="https://media.istockphoto.com/id/537287169/id/vektor/bendera-cina.jpg?s=612x612&w=0&k=20&c=uGupXdzW8jt3glSFmZTO8dY9rdXHITdJHsgxeX6ryIU=" alt="China Flag" className="w-6 h-4 mr-2"/>
-                                China
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => onCountryFilter('Korea')}
-                                className={`flex items-center px-4 py-2 text-gray-300 rounded-md ${currentFilter === 'Korea' ? 'bg-gray-700' : 'hover:bg-gray-700'} w-full text-left`}
-                            >
-                                <img src="https://media.istockphoto.com/id/1132287785/id/vektor/bendera-korea-selatan.jpg?s=612x612&w=0&k=20&c=7hymvujlLAAgdYiRc52VhLOeKBGM6Z6eJcjQNzc6fhI=" alt="Korea Flag" className="w-6 h-4 mr-2"/>
-                                Korea
-                            </button>
-                        </li>
+                        {countries && countries.length > 0 && countries.map((country) => (
+                            <CountryButton
+                                key={country.country_name}
+                                country={country.country_name}
+                                flagUrl={country.flag_url}
+                                isSelected={currentFilter === country.country_name}
+                                onClick={onCountryFilter}
+                            />
+                        ))}
+
                     </ul>
                 </div>
             </aside>

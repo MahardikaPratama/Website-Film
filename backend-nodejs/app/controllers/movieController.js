@@ -14,8 +14,8 @@ exports.getAllMovies = async (req, res) => {
 // Search Movies with Pagination
 exports.searchMovies = async (req, res) => {
     try {
-        const { search, page = 1, limit = 10 } = req.query;
-        const movies = await Movie.searchMovies(search, page, limit);
+        const { keyword = '', page = 1, limit = 10 } = req.query; 
+        const movies = await Movie.searchMovies(keyword, page, limit);
         res.json(movies);
     } catch (error) {
         res.status(500).send(error.message);
@@ -25,22 +25,27 @@ exports.searchMovies = async (req, res) => {
 // Filtering and Sorting Movies with Pagination
 exports.filterSortMovies = async (req, res) => {
     try {
-        const { sort_by, filter_by, page = 1, limit = 10 } = req.query;
-        const movies = await Movie.filterSortMovies(sort_by, filter_by, page, limit);
-        res.json(movies);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-};
+        // Ambil parameter dari request
+        const { year, genre_name, release_status, platform_name, award, country_name, sort_by, page = 1, limit = 10 } = req.query;
 
-// Filter Movies by Country with Pagination
-exports.filterMoviesByCountry = async (req, res) => {
-    try {
-        const { country, page = 1, limit = 10 } = req.query;
-        const movies = await Movie.filterMoviesByCountry(country, page, limit);
+        // Buat objek filter
+        const filters = {
+            year,
+            genre_name,
+            release_status,
+            platform_name,
+            award,
+            country_name
+        };
+
+        // Panggil fungsi model dengan filter dan sorting
+        const movies = await Movie.filterSortMovies(filters, sort_by, page, limit);
+
+        // Kirimkan hasilnya
         res.json(movies);
     } catch (error) {
-        res.status(500).send(error.message);
+        // Jika ada error, kirim pesan error
+        res.status(500).send('Failed to filter and sort movies: ' + error.message);
     }
 };
 

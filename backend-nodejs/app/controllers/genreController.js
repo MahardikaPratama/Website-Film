@@ -1,15 +1,15 @@
 const Genre = require('../models/genre');
 
-exports.getAllGenres = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
-        const genres = await Genre.getAll();
-        res.json(genres);
+        const genre = await Genre.getAll();
+        res.json(genre);
     } catch (error) {
         res.status(500).send(error.message);
     }
 };
 
-exports.getGenreById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const genre = await Genre.getById(req.params.id);
         res.json(genre);
@@ -18,7 +18,7 @@ exports.getGenreById = async (req, res) => {
     }
 };
 
-exports.createGenre = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const genre = await Genre.create(req.body);
         res.status(201).json(genre);
@@ -27,7 +27,7 @@ exports.createGenre = async (req, res) => {
     }
 };
 
-exports.updateGenre = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const genre = await Genre.update(req.params.id, req.body);
         res.json(genre);
@@ -36,7 +36,7 @@ exports.updateGenre = async (req, res) => {
     }
 };
 
-exports.deleteGenre = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Genre.delete(req.params.id);
         res.status(204).json(result);

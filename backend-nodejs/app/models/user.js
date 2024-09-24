@@ -30,3 +30,5 @@ const User = {
         return res.rowCount;
     }
 };
+
+module.exports = User;

@@ -1,29 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import DropdownSearch from './DropdownSearch';
+import genreDataService from '../services/genre.service';
+import awardDataService from '../services/award.service';
+import platformDataService from '../services/platform.service';
 
-const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
+const FilterSortOptions = ({ onFilterChange, onSortChange }) => {
     const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [genres, setGenres] = useState([]);
+    const [awards, setAwards] = useState([]);
+    const [platforms, setPlatforms] = useState([]);
+
+    // Fetch genres, awards, and platforms
+    const fetchGenres = useCallback(async () => {
+        try {
+            const response = await genreDataService.getAll();
+            setGenres(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    const fetchAwards = useCallback(async () => {
+        try {
+            const response = await awardDataService.getAll();
+            setAwards(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    const fetchPlatforms = useCallback(async () => {
+        try {
+            const response = await platformDataService.getAll();
+            setPlatforms(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchGenres();
+        fetchAwards();
+        fetchPlatforms();
+    }, [fetchGenres, fetchAwards, fetchPlatforms]);  
 
     const handleFilterButtonClick = () => {
-        setIsFilterVisible(true);
-    };
-
-    const handleClearFilterButtonClick = () => {
-        setIsFilterVisible(false);
-        onFilterChange({ target: { name: 'year', value: '' } });
-        onFilterChange({ target: { name: 'genre', value: '' } });
-        onFilterChange({ target: { name: 'status', value: '' } });
-        onFilterChange({ target: { name: 'availability', value: '' } });
-        onFilterChange({ target: { name: 'award', value: '' } });
-        onSortChange({ target: { name: 'sort', value: '' } });
+        setIsFilterVisible(!isFilterVisible);
     };
 
     const filterOptions = {
-        year: [...Array(25).keys()].map(i => 2000 + i),
-        genre: ["Action", "Adventure", "Comedy", "Crime", "Drama", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi", "Slice of Life", "Thriller", "War", "Western", "Mystery", "Documentary"],
-        status: ["Ongoing", "Completed", "Upcoming"],
-        availability: ["Netflix", "Iqiyi", "Crunchyroll"],
-        award: ["Awarded", "Not Awarded"],
         sort: [
             { value: "title-asc", label: "Alphabetical (A-Z)" },
             { value: "title-desc", label: "Alphabetical (Z-A)" },
@@ -34,8 +62,18 @@ const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
         ]
     };
 
+    const handleClearFilterButtonClick = () => {
+        onFilterChange({ target: { name: 'year', value: '' } });
+        onFilterChange({ target: { name: 'genre_name', value: '' } });
+        onFilterChange({ target: { name: 'release_status', value: '' } });
+        onFilterChange({ target: { name: 'platform_name', value: '' } });
+        onFilterChange({ target: { name: 'award', value: '' } });
+        onSortChange({ target: { name: 'sort', value: '' } });
+    };
+
+
     return (
-        <div>
+        <div className="w-full p-4">
             {/* Filter and Sort Buttons */}
             <button
                 id="filter-button"
@@ -56,46 +94,54 @@ const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
 
             {/* Filter and Sort Options */}
             <div className={`flex-col mb-4 space-y-4 filter-content md:flex lg:space-y-0 lg:flex-row lg:space-x-4 ${isFilterVisible ? '' : 'hidden'}`}>
+                {/* Filter Options */}
                 <div className="flex flex-col w-full space-y-2 lg:flex-row lg:items-center lg:space-x-2 lg:w-auto">
-                    <span className="w-1/3 text-gray-300">Filtered by:</span>
+                    <span className="w-full text-gray-300 lg:w-auto">Filtered by:</span>
                     <div className="grid w-full grid-cols-2 gap-2 lg:flex lg:space-x-2">
                         {/* Dropdown Year */}
                         <DropdownSearch
                             label="Year"
-                            options={filterOptions.year}
+                            options={[...Array(25).keys()].map(i => 2000 + i)}
                             onChange={onFilterChange}
                             name="year"
+                            className="w-full lg:w-auto"
                         />
                         {/* Dropdown Genre */}
                         <DropdownSearch
                             label="Genre"
-                            options={filterOptions.genre}
+                            options={genres.map(genre => genre.genre_name)}
                             onChange={onFilterChange}
-                            name="genre"
+                            name="genre_name"
+                            className="w-full lg:w-auto"
                         />
                         {/* Dropdown Status */}
                         <DropdownSearch
                             label="Status"
-                            options={filterOptions.status}
+                            options={["ONGOING", "COMPLETED", "UPCOMING"]}
                             onChange={onFilterChange}
-                            name="status"
+                            name="release_status"
+                            className="w-full lg:w-auto"
                         />
                         {/* Dropdown Availability */}
                         <DropdownSearch
                             label="Availability"
-                            options={filterOptions.availability}
+                            options={platforms.map(platform => platform.platform_name)}
                             onChange={onFilterChange}
-                            name="availability"
+                            name="platform_name"
+                            className="w-full lg:w-auto"
                         />
                         {/* Dropdown Award */}
                         <DropdownSearch
                             label="Award"
-                            options={filterOptions.award}
+                            options={awards.map(award => award.award_name)}
                             onChange={onFilterChange}
                             name="award"
+                            className="w-full lg:w-auto"
                         />
                     </div>
                 </div>
+
+                {/* Sort Options */}
                 <div className="flex flex-col w-full space-y-2 lg:flex-row lg:items-center lg:space-x-2 lg:w-auto">
                     <span className="text-gray-300">Sorted by:</span>
                     <DropdownSearch
@@ -103,21 +149,12 @@ const FilterSortOptions = ({ onFilterChange, onSortChange, onSubmit }) => {
                         options={filterOptions.sort.map(option => option.label)}
                         onChange={onSortChange}
                         name="sort"
+                        className="w-full lg:w-auto"
                     />
                 </div>
             </div>
-
-            {/* Submit Button */}
-            <div className={`justify-start ${isFilterVisible ? '' : 'hidden'} mb-4 md:flex`}>
-                <button 
-                    type="button" 
-                    className="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5" 
-                    onClick={onSubmit}
-                >
-                    Submit
-                </button>
-            </div>
         </div>
+
     );
 };
 

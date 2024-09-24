@@ -1,6 +1,6 @@
 const User = require('../models/user');
 
-exports.getAllUsers = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const users = await User.getAll();
         res.json(users);
@@ -9,7 +9,7 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-exports.getUserById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const user = await User.getById(req.params.id);
         res.json(user);
@@ -18,7 +18,7 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-exports.createUser = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const user = await User.create(req.body);
         res.status(201).json(user);
@@ -27,7 +27,7 @@ exports.createUser = async (req, res) => {
     }
 };
 
-exports.updateUser = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const user = await User.update(req.params.id, req.body);
         res.json(user);
@@ -36,7 +36,7 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await User.delete(req.params.id);
         res.status(204).json(result);

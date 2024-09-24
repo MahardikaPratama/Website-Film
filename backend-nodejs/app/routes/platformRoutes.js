@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const platformController = require('../controllers/platformController');
 
-router.get('/', platformController.getAllPlatforms);
-router.get('/:id', platformController.getPlatformById);
-router.post('/', platformController.createPlatform);
-router.put('/:id', platformController.updatePlatform);
-router.delete('/:id', platformController.deletePlatform);
+router.get('/', platformController.getAll);
+router.get('/:id', platformController.getById);
+router.post('/', platformController.create);
+router.put('/:id', platformController.update);
+router.delete('/:id', platformController.delete);
 
 module.exports = router;

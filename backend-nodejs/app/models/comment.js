@@ -30,3 +30,5 @@ const Comment = {
         return res.rowCount;
     }
 };
+
+module.exports = Comment;

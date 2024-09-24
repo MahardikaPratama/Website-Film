@@ -1,6 +1,6 @@
 const Country = require('../models/country');
 
-exports.getAllCountries = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const countries = await Country.getAll();
         res.json(countries);
@@ -9,7 +9,7 @@ exports.getAllCountries = async (req, res) => {
     }
 };
 
-exports.getCountryById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const country = await Country.getById(req.params.id);
         res.json(country);
@@ -18,7 +18,7 @@ exports.getCountryById = async (req, res) => {
     }
 };
 
-exports.createCountry = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const country = await Country.create(req.body);
         res.status(201).json(country);
@@ -27,7 +27,7 @@ exports.createCountry = async (req, res) => {
     }
 };
 
-exports.updateCountry = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const country = await Country.update(req.params.id, req.body);
         res.json(country);
@@ -36,7 +36,7 @@ exports.updateCountry = async (req, res) => {
     }
 };
 
-exports.deleteCountry = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Country.delete(req.params.id);
         res.status(204).json(result);

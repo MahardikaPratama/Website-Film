@@ -2,7 +2,6 @@
 import React from "react";
 
 const SearchCard = ({ title, year, genres, rating, views, imageUrl, status }) => {
-    const genresString = genres.join(', ');
 
     let statusColor;
     switch (status) {
@@ -33,7 +32,7 @@ const SearchCard = ({ title, year, genres, rating, views, imageUrl, status }) =>
             <div className="flex-1">
                 <h3 className="text-lg font-bold text-white">{title}</h3>
                 <p className="text-gray-400">{year}</p>
-                <p className="text-gray-400">{genresString}</p>
+                <p className="text-gray-400">{genres}</p>
                 <div className="flex items-center justify-between mt-2">
                     <p className="text-gray-400">Rate {rating}/10</p>
                     <p className="text-sm text-gray-500">{views} views</p>

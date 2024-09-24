@@ -17,14 +17,15 @@ app.use(cors());
 app.use(express.json()); // Gantikan body-parser
 
 // Routes
+app.use('/api/genres', genreRoutes);
+app.use('/api/countries', countryRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/actors', actorRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/awards', awardRoutes);
 app.use('/api/comments', commentRoutes);
-app.use('/api/countries', countryRoutes);
-app.use('/api/genres', genreRoutes);
 app.use('/api/platforms', platformRoutes);
+
 
 // Server listen
 app.listen(PORT, () => {

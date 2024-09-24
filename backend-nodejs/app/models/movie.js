@@ -26,18 +26,21 @@ const Movie = {
     
 
     // Search Movies with Pagination
-    searchMovies: async (search, page, limit) => {
+    searchMovies: async (keyword, page, limit) => { // change search to keyword
         try {
             const offset = (page - 1) * limit;
             const res = await pool.query(
-                'SELECT m.title, m.year, g.genre_name, m.movie_rate, m.views, m.poster_url, m.release_status ' +
-                'FROM movies m ' +
-                'LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id ' +
-                'LEFT JOIN genres g ON mg.genre_id = g.genre_id ' +
-                'WHERE m.title ILIKE $1 OR m.alternative_title ILIKE $1 OR m.synopsis ILIKE $1 ' +
-                'ORDER BY m.title ASC ' +
-                'LIMIT $2 OFFSET $3', 
-                [`%${search}%`, limit, offset]  // Ensure correct order here
+                `SELECT m.movie_id ,m.title, m.year, 
+                COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres, 
+                m.movie_rate, m.views, m.poster_url, m.release_status 
+                FROM movies m 
+                LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
+                LEFT JOIN genres g ON mg.genre_id = g.genre_id 
+                WHERE m.title ILIKE $1 OR m.alternative_title ILIKE $1 OR m.synopsis ILIKE $1 
+                GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status
+                ORDER BY m.title ASC 
+                LIMIT $2 OFFSET $3`, 
+                [`%${keyword}%`, limit, offset]  // Ensure correct order here
             );
             return res.rows;
         } catch (error) {
@@ -46,49 +49,125 @@ const Movie = {
     },
     
 
-    // Filtering and Sorting Movies with Pagination
-    filterSortMovies: async (sort_by, filter_by, page, limit) => {
+    // Model method to filter and sort movies with pagination
+    filterSortMovies: async (filters, sort_by, page, limit) => {
+        console.log('Filters:', filters);
         try {
-            const offset = (page - 1) * limit;
-            let query = 
-                'SELECT m.title, m.year, g.genre_name, m.movie_rate, m.views, m.poster_url, m.release_status ' +
-                'FROM movies m ' +
-                'LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id ' +
-                'LEFT JOIN genres g ON mg.genre_id = g.genre_id ';
+            // Inisialisasi query dasar
+            let query = `
+                SELECT
+                    m.movie_id,
+                    m.title,
+                    m.year,
+                    COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres,
+                    m.movie_rate,
+                    m.views,
+                    m.poster_url,
+                    m.release_status
+                FROM movies m
+                LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id
+                LEFT JOIN genres g ON mg.genre_id = g.genre_id
+            `;
 
-            // Filter by genre_name, release_status, year, platform, etc.
-            if (filter_by) {
-                query += 'WHERE ' + filter_by + ' ';
+            // Inisialisasi array untuk menyimpan kondisi WHERE dan parameter
+            let conditions = [];
+            let queryParams = [];
+
+            // Tambahkan kondisi berdasarkan filter yang diterima
+            if (filters.year) {
+                queryParams.push(filters.year);
+                conditions.push(`m.year = $${queryParams.length}`);
             }
 
-            // Sort by title, year, movie_rate, views
-            query += `ORDER BY ${sort_by || 'm.title'} ASC LIMIT $1 OFFSET $2`;
-            
-            const res = await pool.query(query, [limit, offset]);
+            if (filters.genre_name) {
+                queryParams.push(filters.genre_name);
+                conditions.push(`g.genre_name = $${queryParams.length}`);
+            }
+
+            if (filters.release_status) {
+                queryParams.push(filters.release_status);
+                conditions.push(`m.release_status = $${queryParams.length}`);
+            }
+
+            if (filters.platform_name) {
+                queryParams.push(filters.platform_name);
+                conditions.push(`EXISTS (
+                    SELECT 1 
+                    FROM available_on mp 
+                    JOIN platform p ON mp.platform_id = p.platform_id 
+                    WHERE mp.movie_id = m.movie_id 
+                    AND p.platform_name = $${queryParams.length}
+                )`);
+            }
+
+            if (filters.award) {
+                queryParams.push(filters.award);
+                conditions.push(`EXISTS (
+                    SELECT 1 
+                    FROM awarded ma 
+                    JOIN awards a ON ma.award_id = a.award_id 
+                    WHERE ma.movie_id = m.movie_id 
+                    AND a.award_name = $${queryParams.length}
+                )`);
+            }
+
+            if (filters.country_name) {
+                queryParams.push(filters.country_name);
+                conditions.push(`m.country_id = (SELECT country_id FROM countries WHERE country_name = $${queryParams.length})`);
+            }            
+
+            // Gabungkan kondisi WHERE jika ada
+            if (conditions.length > 0) {
+                query += ` WHERE ` + conditions.join(' AND ');
+            }
+
+            // Grupkan berdasarkan movie_id untuk menghindari duplikasi
+            query += `
+                GROUP BY 
+                    m.movie_id, m.title, m.year, m.movie_rate, m.views,
+                    m.poster_url, m.release_status
+            `;
+
+            // Tambahkan sorting jika ada
+            if (sort_by) {
+                switch (sort_by) {
+                    case 'Alphabetical (A-Z)':
+                        query += ` ORDER BY m.title ASC`;
+                        break;
+                    case 'Alphabetical (Z-A)':
+                        query += ` ORDER BY m.title DESC`;
+                        break;
+                    case 'Rating (Low to High)':
+                        query += ` ORDER BY m.movie_rate ASC`;
+                        break;
+                    case 'Rating (High to Low)':
+                        query += ` ORDER BY m.movie_rate DESC`;
+                        break;
+                    case 'Year (Old to New)':
+                        query += ` ORDER BY m.year ASC`;
+                        break;
+                    case 'Year (New to Old)':
+                        query += ` ORDER BY m.year DESC`;
+                        break;
+                    default:
+                        query += ` ORDER BY m.title ASC`;
+                }
+            }
+
+            // Tambahkan LIMIT dan OFFSET
+            const offset = (page - 1) * limit;
+            queryParams.push(limit, offset);
+            query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
+            // Eksekusi query
+
+            const res = await pool.query(query, queryParams);
             return res.rows;
+
         } catch (error) {
             throw new Error('Failed to filter and sort movies: ' + error.message);
         }
     },
-
-    // Filter Movies by Country with Pagination
-    filterMoviesByCountry: async (country, page, limit) => {
-        try {
-            const offset = (page - 1) * limit;
-            const res = await pool.query(
-                'SELECT m.title, m.year, g.genre_name, m.movie_rate, m.views, m.poster_url, m.release_status ' +
-                'FROM movies m ' +
-                'LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id ' +
-                'LEFT JOIN genres g ON mg.genre_id = g.genre_id ' +
-                'WHERE m.country_id = (SELECT country_id FROM countries WHERE country_name = $1) ' +
-                'ORDER BY m.title ASC ' +
-                'LIMIT $2 OFFSET $3', [country, limit, offset]
-            );
-            return res.rows;
-        } catch (error) {
-            throw new Error('Failed to filter movies by country: ' + error.message);
-        }
-    },    
+    
     getById: async (id) => {
         try {
             const res = await pool.query('SELECT * FROM movies WHERE movie_id = $1', [id]);

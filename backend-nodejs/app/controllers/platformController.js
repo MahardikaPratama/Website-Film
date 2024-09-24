@@ -1,6 +1,6 @@
 const Platform = require('../models/platform');
 
-exports.getAllPlatforms = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         const platforms = await Platform.getAll();
         res.json(platforms);
@@ -9,7 +9,7 @@ exports.getAllPlatforms = async (req, res) => {
     }
 };
 
-exports.getPlatformById = async (req, res) => {
+exports.getById = async (req, res) => {
     try {
         const platform = await Platform.getById(req.params.id);
         res.json(platform);
@@ -18,7 +18,7 @@ exports.getPlatformById = async (req, res) => {
     }
 };
 
-exports.createPlatform = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const platform = await Platform.create(req.body);
         res.status(201).json(platform);
@@ -27,7 +27,7 @@ exports.createPlatform = async (req, res) => {
     }
 };
 
-exports.updatePlatform = async (req, res) => {
+exports.update = async (req, res) => {
     try {
         const platform = await Platform.update(req.params.id, req.body);
         res.json(platform);
@@ -36,7 +36,7 @@ exports.updatePlatform = async (req, res) => {
     }
 };
 
-exports.deletePlatform = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
         const result = await Platform.delete(req.params.id);
         res.status(204).json(result);

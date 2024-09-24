@@ -30,3 +30,5 @@ const Genre = {
         return res.rowCount;
     }
 };
+
+module.exports = Genre;
