@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ChangePassword from './pages/ChangePassword';
+import Dashboard from './pages/Dashboard';
 import CmsDrama from './pages/cmsDrama';
 import CmsCountry from './pages/cmsCountry';
 import CmsAward from './pages/cmsAward';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/cms-drama" element={<CmsDrama />} />
         <Route path="/cms-country" element={<CmsCountry />} />
         <Route path="/cms-awards" element={<CmsAward />} />
