@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import SidebarAdmin from '../components/SidebarAdmin';
 import Footer from "../components/footer";
 import moviesData from '../data/movies.json';  // Import movie data
@@ -39,8 +39,7 @@ const AdminDramaDashboard = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
-    <div className="flex flex-col flex-1 md:flex-row">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <SidebarAdmin />
 
@@ -57,33 +56,34 @@ const AdminDramaDashboard = () => {
           />
         </div>
 
-        {/* Movie Table */}
-        <div className="p-6 bg-gray-900">
-          {/* Dashboard Stats */}
-          <div className="grid grid-cols-3 gap-6 p-6">
-            <div className="bg-gray-700 bg-opacity-50 p-4 rounded-md shadow-md text-left flex items-center">
-              <i className="fas fa-film text-orange-500 text-3xl mr-4"></i> {/* Icon film */}
-              <div>
-                <h2 className="text-white text-base font-semibold mb-1">Total Movies</h2>
-                <p className="text-white text-sm">{movies.length}</p>
-              </div>
-            </div>
-            <div className="bg-gray-700 bg-opacity-50 p-4 rounded-md shadow-md text-left flex items-center">
-              <i className="fas fa-th-large text-blue-500 text-3xl mr-4"></i> {/* Icon categories */}
-              <div>
-                <h2 className="text-white text-base font-semibold mb-1">Total Categories</h2>
-                <p className="text-white text-sm">11</p>
-              </div>
-            </div>
-            <div className="bg-gray-700 bg-opacity-50 p-4 rounded-md shadow-md text-left flex items-center">
-              <i className="fas fa-users text-green-500 text-3xl mr-4"></i> {/* Icon users */}
-              <div>
-                <h2 className="text-white text-base font-semibold mb-1">Total Users</h2>
-                <p className="text-white text-sm">{useRef.length}</p>
-              </div>
+        {/* Dashboard Stats */}
+        <div className="grid grid-cols-3 gap-6 p-6">
+          <div className="bg-gray-800 p-4 rounded-md shadow-md text-center flex items-center">
+            <i className="fas fa-film text-orange-500 text-3xl mr-4"></i> {/* Icon film */}
+            <div>
+              <h2 className="text-white text-2xl">Total Movies</h2>
+              <p className="text-orange-500 text-3xl">{movies.length}</p>
             </div>
           </div>
+          <div className="bg-gray-800 p-4 rounded-md shadow-md text-center flex items-center">
+            <i className="fas fa-th-large text-blue-500 text-3xl mr-4"></i> {/* Icon categories */}
+            <div>
+              <h2 className="text-white text-2xl">Total Categories</h2>
+              <p className="text-blue-500 text-3xl">11</p>
+            </div>
+          </div>
+          <div className="bg-gray-800 p-4 rounded-md shadow-md text-center flex items-center">
+            <i className="fas fa-users text-green-500 text-3xl mr-4"></i> {/* Icon users */}
+            <div>
+              <h2 className="text-white text-2xl">Total Users</h2>
+              <p className="text-green-500 text-3xl">Loading...</p>
+            </div>
+          </div>
+        </div>
 
+
+        {/* Movie Table */}
+        <div className="p-6 bg-gray-900">
           <div className="overflow-x-auto">
             <table className="table-auto w-full text-white">
               <thead>
@@ -140,11 +140,9 @@ const AdminDramaDashboard = () => {
             />
           </div>
         </div>
-        <Footer />
+
         {/* Footer */}
-
-
-</div>
+        <Footer />
       </div>
     </div>
   );

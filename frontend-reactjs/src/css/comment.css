@@ -126,3 +126,24 @@ html {
     color: #ffcc00;
 }
 
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden; /* Hide the scrollbar */
+}
+
+.carousel-items {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-left: 40px;
+}
+
+.carousel-items::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for webkit browsers */
+}
+
+.carousel-items {
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
