@@ -41,11 +41,8 @@ const CmsAward = () => {
                             ></path>
                         </svg>
                     </button>
-
-                    {/* Section for country management */}
-                    <section className="container p-4 mx-auto bg-gray-800 rounded-md shadow-md md:p-6">
                         {/* Form to add a new country */}
-                        <form className="flex flex-col w-full max-w-lg p-4 mb-6 space-y-4">
+                        <form className="flex flex-col w-full p-4 mb-6 space-y-4">
                             <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
                                 <div className="flex flex-col w-full md:w-1/2">
                                     <label htmlFor="country" className="block font-medium text-gray-300">Country</label>
@@ -65,27 +62,27 @@ const CmsAward = () => {
                                         className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
                                     />
                                 </div>
-                            </div>
-
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="awards" className="block font-medium text-gray-300">Awards</label>
-                                <input 
-                                    type="text" 
-                                    id="awards" 
-                                    name="awards" 
-                                    className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
-                                />
-                            </div>
-
-                            <div className="flex justify-left">
+                                <div className="flex flex-col w-full md:w-1/2">
+                                    <label htmlFor="awards" className="block font-medium text-gray-300">Award</label>
+                                    <input 
+                                        type="text" 
+                                        id="awards" 
+                                        name="awards"
+                                        className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
+                                    />
+                                </div>
                                 <button 
                                     type="submit" 
-                                    className="px-4 py-2 text-white bg-orange-500 rounded-md hover:bg-orange-600"
+                                    className="h-10 px-4 text-white bg-orange-500 rounded-md hover:bg-orange-600"
+                                    style={{ marginTop: '25px' }}
                                 >
                                     Submit
                                 </button>
                             </div>
+
                         </form>
+                    {/* Section for country management */}
+                    <section className="container p-4 mx-full bg-gray-800 rounded-md shadow-md md:p-14">
 
                         {/* Table displaying countries */}
                         <div className="overflow-x-auto">
@@ -118,16 +115,16 @@ const CmsAward = () => {
                                 </tbody>
                             </table>
                         </div>
-
-                        {/* Pagination Component */}
-                        <PaginationAdmin 
+                    </section>
+                                            {/* Pagination Component */}
+                                            <PaginationAdmin 
                             currentPage={1} 
                             totalEntries={100} 
                             entriesPerPage={10} 
                             onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
                         />
-                    </section>
                 </main>
+
             </div>
 
             <Footer />

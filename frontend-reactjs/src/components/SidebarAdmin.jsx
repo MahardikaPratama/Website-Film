@@ -48,8 +48,19 @@ const SidebarAdmin = ({ isVisible, toggleSidebar }) => {
                     />
                     DramaKu
                 </h2>
+
                 <ul className="space-y-2">
+                <li>
+                        <Link
+                            to="/dashboard"
+                            className={`items-center block px-4 py-2 text-gray-300 rounded-md ${isActiveLink('/cms-country') ? 'bg-gray-700' : 'hover:bg-gray-700'} menu-link`}
+                        >
+                            <FontAwesomeIcon icon={faGlobe} className="mr-2" />
+                            Dashboard
+                        </Link>
+                    </li>
                     <li className="rounded-md">
+                        
                         <button
                             id="accordion-button"
                             className={`flex items-center justify-between w-full px-4 py-2 text-left text-gray-300 focus:outline-none ${isActiveLink('/cms-drama') || isActiveLink('/cms-drama-input') ? 'bg-gray-700' : 'hover:bg-gray-700'} menu-link`}
