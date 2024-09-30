@@ -20,6 +20,14 @@ class UserDataService {
     delete(id) {
         return http.delete(`/users/${id}`);
     }
+
+    register(data) {
+        return http.post(`/users/register`, data);
+    }
+
+    login(data) {
+        return http.post(`/users/login`, data);
+    }
 }
 
 const userDataService = new UserDataService();

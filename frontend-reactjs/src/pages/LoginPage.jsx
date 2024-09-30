@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import userDataService from '../services/user.service';
 
 const LoginPage = () => {
     //Hook untuk navigasi
@@ -12,8 +13,27 @@ const LoginPage = () => {
         setShowPassword(!showPassword);
     };
     // Fungsi untuk menangani tombol login ke cms-drama
-    const handleLogin = () => {
-        navigate('/cms-drama');
+    const handleLogin = async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            // Panggil method login dari userDataService
+            const response = await userDataService.login({ email, password });
+
+            // Simpan token ke localStorage jika login berhasil
+            localStorage.setItem('token', response.data.token); 
+            
+            // Navigasi ke halaman CMS
+            navigate('/cms-drama');
+        } catch (error) {
+            // Menampilkan pesan error jika login gagal
+            if (error.response && error.response.status === 401) {
+                alert('Login failed. Please check your credentials.');
+            } else {
+                alert('An error occurred. Please try again later.');
+            }
+        }
     };
 
 

@@ -5,27 +5,34 @@ const User = {
         const res = await pool.query('SELECT * FROM users');
         return res.rows;
     },
+
     getById: async (id) => {
         const res = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
         return res.rows[0];
     },
+
+    getByEmail: async (email) => {
+        const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        return res.rows[0];
+    },
+
     create: async (data) => {
-        const { user_id, username, email, password, role } = data;
+        const { username, email, password } = data;
+        await pool.query('CALL register_user($1, $2, $3)', [username, email, password]);
+        const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        return res.rows[0];
+    },
+
+    update: async (user_id, data) => {
+        const { username, email, password } = data;
         const res = await pool.query(
-            'INSERT INTO users (user_id, username, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [user_id, username, email, password, role]
+            'UPDATE users SET username = $1, email = $2, password = $3 WHERE user_id = $4 RETURNING *',
+            [username, email, password, user_id]
         );
         return res.rows[0];
     },
-    update: async (id, data) => {
-        const { user_id, username, email, password, role } = data;
-        const res = await pool.query(
-            'UPDATE users SET user_id = $1, username = $2, email = $3, password = $4, role = $5 WHERE user_id = $6 RETURNING *',
-            [user_id, username, email, password, role, id]
-        );
-        return res.rows[0];
-    },
-    delete: async (id) => {
+
+    deleteUsers: async (id) => {
         const res = await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
         return res.rowCount;
     }
