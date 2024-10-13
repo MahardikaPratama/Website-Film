@@ -11,16 +11,40 @@ const Movie = {
             const totalCount = parseInt(totalMovies.rows[0].count, 10);
     
             // Ambil data film
-            const res = await pool.query(
-                `SELECT m.movie_id, m.title, m.year, 
-                COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres, 
-                m.movie_rate, m.views, m.poster_url, m.release_status
-                FROM movies m 
-                LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
-                LEFT JOIN genres g ON mg.genre_id = g.genre_id 
-                GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status 
-                ORDER BY m.title ASC 
-                LIMIT $1 OFFSET $2`, 
+            // const res = await pool.query(
+                // `SELECT m.movie_id, m.title, m.year, 
+                // `SELECT m.movie_id, m.poster_url, m.title, m.alternative_title, 
+                // m.movie_rate, m.views, m.year, m.synopsis, 
+                // m.release_status, m.approval_status, m.link_trailer, 
+                // m.country_id, m.user_id
+                // COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres, 
+                // m.movie_rate, m.views, m.poster_url, m.release_status
+                // FROM movies m 
+                // LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
+                // LEFT JOIN genres g ON mg.genre_id = g.genre_id 
+                // GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status 
+                // ORDER BY m.title ASC 
+                // LIMIT $1 OFFSET $2`,
+                const res = await pool.query(
+                    `SELECT  m.movie_id, m.title, m.year, 
+                    m.synopsis, m.views, m.movie_rate, m.alternative_title, 
+                    m.approval_status, m.release_status,
+                        COALESCE(c.country_name, 'Unknown Country') AS country_name, 
+                        COALESCE(STRING_AGG(DISTINCT g.genre_name, ', '), 'No Genre') AS genres, 
+                        COALESCE(STRING_AGG(DISTINCT a.actor_name, ', '), 'No Actors') AS actors,  
+                        u.user_name  
+                    FROM movies m
+                    LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id
+                    LEFT JOIN genres g ON mg.genre_id = g.genre_id
+                    LEFT JOIN acted_in ai ON m.movie_id = ai.movie_id
+                    LEFT JOIN actors a ON ai.actor_id = a.actor_id
+                    LEFT JOIN countries c ON m.country_id = c.country_id  
+                    LEFT JOIN users u ON m.user_id = u.user_id  
+                    GROUP BY 
+                        m.movie_id, m.title, m.year, m.synopsis, m.views, m.movie_rate, 
+                        m.alternative_title, m.approval_status, m.release_status, c.country_name, u.user_name
+                    ORDER BY m.title ASC
+                    LIMIT $1 OFFSET $2;`,  
                 [limit, offset]
             );
     
@@ -199,11 +223,14 @@ const Movie = {
         }
     },
     create: async (data) => {
-        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
+        // const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
+        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id } = data;
         try {
             const res = await pool.query(
-                'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
-                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id]
+                // 'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+                'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id]
+                // [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id]
             );
             return res.rows[0];
         } catch (error) {
@@ -211,11 +238,14 @@ const Movie = {
         }
     },
     update: async (id, data) => {
-        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
+        // const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
+        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id } = data;
         try {
             const res = await pool.query(
-                'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11 WHERE movie_id = $12 RETURNING *',
-                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, id]
+                // 'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11 WHERE movie_id = $12 RETURNING *',
+                // [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, id]
+                'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11, user_id = $12 WHERE movie_id = $13 RETURNING *',
+                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id, id]
             );
             return res.rows[0];
         } catch (error) {
