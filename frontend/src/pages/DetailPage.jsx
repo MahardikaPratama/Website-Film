@@ -4,22 +4,50 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'; 
 import '../css/comment.css';
 import Footer from "../components/footer";
-import movieData from '../data/movies.json';
+import movieDataService from '../services/movie.service'; 
+import RecommendedMovies from '../components/RecommendedMovies'; // Import your new component
+
+
+// import movieData from '../data/movies.json';
 
 const DetailPage = () => {
     const { id } = useParams();
     const idUrl = parseInt(id, 10);
     const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
     const carouselRef = useRef(null);
-    const [genresString, setGenresString] = useState('');
-    const [avaibilityString, setAvaibilityString] = useState('');
-    
+    // const [genresString, setGenresString] = useState('');
+    // const [avaibilityString, setAvaibilityString] = useState('');
+   
+    // useEffect(() => {
+    //     const foundMovie = movieData.find(movie => movie.id === idUrl);
+    //     setMovie(foundMovie);
+    //     setGenresString(foundMovie.genres.join(', '));
+    //     setAvaibilityString(foundMovie.avaibility.join(', '));
+    // }, [idUrl]);
+
     useEffect(() => {
-        const foundMovie = movieData.find(movie => movie.id === idUrl);
-        setMovie(foundMovie);
-        setGenresString(foundMovie.genres.join(', '));
-        setAvaibilityString(foundMovie.avaibility.join(', '));
+        const fetchMovie = async () => {
+            try {
+                const response = await movieDataService.getMovieById(idUrl);
+                const foundMovie = response.data;
+                console.log('Movie data:', foundMovie); // Log movie data
+                console.log('Genres:', foundMovie.genres); // Log genres
+                console.log('Rating:', foundMovie.rating); // Log rating
+                console.log('Country:', foundMovie.country); // Log country
+    
+                setMovie(foundMovie);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching movie:", error);
+                setError("Failed to load movie data.");
+                setLoading(false);
+            }
+        };
+        fetchMovie();
     }, [idUrl]);
+    
 
     const scrollLeft = () => {
         carouselRef.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -29,9 +57,9 @@ const DetailPage = () => {
         carouselRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     };
 
-    if (!movie) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+    if (!movie) return <div>No movie found.</div>;
 
     return (
         <div className="text-gray-300 bg-gray-900">
@@ -49,7 +77,7 @@ const DetailPage = () => {
                         <div className="lg:w-1/4">
                             <div className="h-64 bg-gray-200 lg:h-auto">
                                 <img 
-                                    src={movie.coverImage} // Use movie data for image
+                                    src={movie.poster_url} 
                                     alt="Drama Poster" 
                                     className="object-cover w-full h-full" 
                                 />
@@ -57,12 +85,17 @@ const DetailPage = () => {
                         </div>
                         <div className="mt-6 lg:w-3/4 lg:pl-6 lg:mt-0">
                             <h1 className="text-4xl font-bold leading-tight text-white">{movie.title}</h1>
-                            <p className="mt-2 text-gray-400">Other Title: {movie['Alternative Title']}</p>
+                            <p className="mt-2 text-gray-400">Other Title: {movie.alternative_title}</p>
                             <p className="mt-2 text-gray-400">Year: {movie.year}</p>
                             <p className="mt-2 text-gray-400">Synopsis: {movie.synopsis}</p>
-                            <p className="mt-2 text-gray-400">Genre: {genresString}</p>
-                            <p className="mt-2 text-gray-400">Rating: {movie.rating}/10</p>
-                            <p className="mt-2 text-gray-400">Availability: {avaibilityString}</p>
+                            <p className="mt-2 text-gray-400">Country: {movie.country_name}</p>
+                            <p className="mt-2 text-gray-400">Genre: {movie.genres ? movie.genres.join(', ') : 'Unknown'}</p>
+                            <p className="mt-2 text-gray-400">Rating: {movie.rating ? `${movie.rating}/10` : 'No rating available'}</p>
+                            <p className="mt-2 text-gray-400">Country: {movie.country || 'Country not specified'}</p>
+
+                            {/* <p className="mt-2 text-gray-400">Genre: {genresString}</p> */}
+                            {/* <p className="mt-2 text-gray-400">Rating: {movie.rating}/10</p> */}
+                            {/* <p className="mt-2 text-gray-400">Availability: {avaibilityString}</p> */}
                         </div>
                     </div>
 
@@ -89,7 +122,7 @@ const DetailPage = () => {
                                 className="flex px-12 py-2 space-x-4 overflow-x-auto"
                             >
                                 {/* Actor items */}
-                                {movie.actors.map((actor, i) => (
+                                {movie.actors && movie.actors.map((actor, i) => (   
                                     <div key={i} className="flex-none w-32">
                                         <div className="h-40 bg-gray-200">
                                             <img 
@@ -110,7 +143,7 @@ const DetailPage = () => {
                         <div className="w-full" style={{ maxWidth: '1280px', aspectRatio: '16/9' }}>
                             <iframe 
                                 className="w-full h-full" 
-                                src={movie['link trailer']} 
+                                src={movie.link_trailer}
                                 title="YouTube video player" 
                                 frameBorder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -182,55 +215,11 @@ const DetailPage = () => {
                                 />
                             </form>
                         </div>
-                     <div className="mt-10">
-        {/* Movies You Might Like Section */}                
-        <h2 className="mb-4 text-2xl font-bold text-white">Movies You Might Like</h2>                 
-            <div className="relative carousel-container" style={{ overflowX: 'hidden' }}>
-             {/* Carousel controls */}
-                <button
-                    onClick={scrollLeft}
-                    className="absolute left-0 z-10 flex items-center justify-center w-10 h-10 text-white bg-gray-800 rounded-full top-1/2 transform -translate-y-1/2 hover:bg-gray-700 focus:outline-none"
-                >
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </button>
-
-                <div
-                    ref={carouselRef}
-                    className="flex space-x-4 overflow-x-auto carousel-items px-12 py-2"
-                    style={{ scrollBehavior: 'smooth' }}
-                >
-                    {/* Movie items */}
-                    {movieData
-                        .filter((otherMovie) => otherMovie.id !== idUrl)
-                        .map((otherMovie) => (
-                            <div
-                                key={otherMovie.id}
-                                className="flex-none w-40 transform transition-transform duration-300 hover:scale-110"
-                                onClick={() => window.location.href = `/detail/${otherMovie.id}`}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <div className="h-56 bg-gray-200">
-                                    <img
-                                        src={otherMovie.coverImage}
-                                        alt={otherMovie.title}
-                                        className="object-cover w-full h-full rounded-md"
-                                    />
-                                </div>
-                                <p className="mt-2 text-center text-gray-400">
-                                    {otherMovie.title}
-                                </p>
-                            </div>
-                        ))}
-                </div>
-
-                <button
-                    onClick={scrollRight}
-                    className="absolute right-0 z-10 flex items-center justify-center w-10 h-10 text-white bg-gray-800 rounded-full top-1/2 transform -translate-y-1/2 hover:bg-gray-700 focus:outline-none"
-                >
-                    <FontAwesomeIcon icon={faArrowRight} />
-                </button>
-            </div>
-        </div>
+                
+                {/* Movies You Might Like Section */}                
+                <div className="mt-10">
+                        <RecommendedMovies /> {/* Insert the recommended movies section here */}
+                    </div>
                     </div>
                 </div>
             </main>

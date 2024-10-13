@@ -1,4 +1,4 @@
-import http from "../http-common";
+import http from "../http-common"; 
 
 class MovieDataService {
     getAllMovies(page = 1, limit = 10) {
@@ -8,17 +8,14 @@ class MovieDataService {
     searchMovies(keyword, page = 1, limit = 10) {
         return http.get(`/movies/search?keyword=${keyword}&page=${page}&limit=${limit}`);
     }
-    
 
     filterSortMovies(filters, sort, page = 1, limit = 10) {
-        // Menyiapkan parameter query
         const params = {
             ...filters, 
             sort_by: sort, 
             page,
             limit
         };
-        console.log("Filter-Sort Params:", params);
         return http.get(`/movies/filter-sort`, { params });
     }
 
@@ -41,6 +38,12 @@ class MovieDataService {
     addToWishlist(movieId) {
         return http.post(`/movies/wishlist`, { movieId });
     }
+
+    // New method for getting recommended movies
+    getRecommendedMovies() {
+        return http.get(`/movies/recommended`);
+    }
+
 }
 
 const movieDataService = new MovieDataService();

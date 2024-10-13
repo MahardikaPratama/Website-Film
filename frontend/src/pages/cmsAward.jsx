@@ -1,20 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarAdmin from '../components/SidebarAdmin';
-import Footer from '../components/footer';  // Pastikan nama file sesuai
+import Footer from '../components/footer';
 import PaginationAdmin from '../components/PaginationAdmin';
+import awardDataService from '../services/award.service'; // Import the Award Data Service
+import countryDataService from '../services/country.service'; // Import the Country Data Service
 import '../css/style.css';
 
 const CmsAward = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const [awards, setAwards] = useState([]);
+    const [countries, setCountries] = useState([]); // State for country list
+    const [formData, setFormData] = useState({ country: '', year: '', awards: '' });
 
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);
     };
 
+    const fetchAwards = async () => {
+        try {
+            const response = await awardDataService.getAll();
+            setAwards(response.data);
+        } catch (error) {
+            console.error("Error fetching awards:", error);
+        }
+    };
+
+    const fetchCountries = async () => {
+        try {
+            const response = await countryDataService.getAll(); // Fetch country data
+            setCountries(response.data); // Set the country list
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAwards();
+        fetchCountries(); // Fetch countries on component mount
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await awardDataService.create(formData);
+            setFormData({ country: '', year: '', awards: '' });
+            fetchAwards();
+        } catch (error) {
+            console.error("Error creating award:", error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await awardDataService.delete(id);
+            fetchAwards();
+        } catch (error) {
+            console.error("Error deleting award:", error);
+        }
+    };
+
+    // Function to get country name by ID
+    const getCountryName = (countryId) => {
+        const country = countries.find(c => c.country_id === countryId); // Find the country by ID
+        return country ? country.country_name : 'Unknown'; // Return the country name or 'Unknown'
+    };
+
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
             <div className="flex flex-col flex-1 md:flex-row">
-                {/* Sidebar Component */}
                 <SidebarAdmin 
                     isVisible={isSidebarVisible}
                     toggleSidebar={toggleSidebar}
@@ -41,55 +99,59 @@ const CmsAward = () => {
                             ></path>
                         </svg>
                     </button>
-                        {/* Form to add a new country */}
-                        <form className="flex flex-col w-full p-4 mb-6 space-y-4">
-                            <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-                                <div className="flex flex-col w-full md:w-1/2">
-                                    <label htmlFor="country" className="block font-medium text-gray-300">Country</label>
-                                    <input 
-                                        type="text" 
-                                        id="country" 
-                                        name="country" 
-                                        className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
-                                    />
-                                </div>
-                                <div className="flex flex-col w-full md:w-1/2">
-                                    <label htmlFor="year" className="block font-medium text-gray-300">Year</label>
-                                    <input 
-                                        type="text" 
-                                        id="year" 
-                                        name="year" 
-                                        className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
-                                    />
-                                </div>
-                                <div className="flex flex-col w-full md:w-1/2">
-                                    <label htmlFor="awards" className="block font-medium text-gray-300">Award</label>
-                                    <input 
-                                        type="text" 
-                                        id="awards" 
-                                        name="awards"
-                                        className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
-                                    />
-                                </div>
-                                <button 
-                                    type="submit" 
-                                    className="h-10 px-4 text-white bg-orange-500 rounded-md hover:bg-orange-600"
-                                    style={{ marginTop: '25px' }}
-                                >
-                                    Submit
-                                </button>
+                    {/* Form to add a new award */}
+                    <form className="flex flex-col w-full p-4 mb-6 space-y-4" onSubmit={handleSubmit}>
+                        <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+                            <div className="flex flex-col w-full md:w-1/3">
+                                <label htmlFor="country" className="block font-medium text-gray-300">Country</label>
+                                <input 
+                                    type="text" 
+                                    id="country" 
+                                    name="country" 
+                                    value={formData.country} 
+                                    onChange={handleChange} 
+                                    className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
+                                />
                             </div>
+                            <div className="flex flex-col w-full md:w-1/3">
+                                <label htmlFor="year" className="block font-medium text-gray-300">Year</label>
+                                <input 
+                                    type="text" 
+                                    id="year" 
+                                    name="year" 
+                                    value={formData.year} 
+                                    onChange={handleChange} 
+                                    className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
+                                />
+                            </div>
+                            <div className="flex flex-col w-full md:w-1/3">
+                                <label htmlFor="awards" className="block font-medium text-gray-300">Award</label>
+                                <input 
+                                    type="text" 
+                                    id="awards" 
+                                    name="awards"
+                                    value={formData.awards} 
+                                    onChange={handleChange} 
+                                    className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md focus:ring focus:ring-orange-500" 
+                                />
+                            </div>
+                            <button 
+                                type="submit" 
+                                className="h-10 px-4 text-white bg-orange-500 rounded-md hover:bg-orange-600"
+                                style={{ marginTop: '25px' }}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </form>
 
-                        </form>
-                    {/* Section for country management */}
+                    {/* Section for award management */}
                     <section className="container p-4 mx-full bg-gray-800 rounded-md shadow-md md:p-14">
-
-                        {/* Table displaying countries */}
                         <div className="overflow-x-auto">
                             <table className="min-w-full text-gray-300 bg-gray-800">
                                 <thead>
                                     <tr className="bg-gray-700">
-                                        <th className="px-4 py-2 border-b border-gray-600"></th>
+                                        <th className="px-4 py-2 border-b border-gray-600">#</th>
                                         <th className="px-4 py-2 text-left border-b border-gray-600">Country</th>
                                         <th className="px-4 py-2 text-left border-b border-gray-600">Year</th>
                                         <th className="px-4 py-2 text-left border-b border-gray-600">Awards</th>
@@ -97,34 +159,31 @@ const CmsAward = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr className="bg-gray-800 odd:bg-gray-700">
-                                        <td className="px-4 py-2 border-b border-gray-600">1</td>
-                                        <td className="px-4 py-2 border-b border-gray-600">Japan</td>
-                                        <td className="px-4 py-2 border-b border-gray-600">2024</td>
-                                        <td className="px-4 py-2 border-b border-gray-600">Japanese Drama Awards Spring 2024</td>
-                                        <td className="px-4 py-2 text-left border-b border-gray-600">
-                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
-                                                <i className="fas fa-edit"></i> {/* Edit Icon */}
-                                            </button>
-                                            |
-                                            <button href="#" className="text-red-500 hover:text-red- ml-2">
-                                                <i className="fas fa-trash"></i> {/* Delete Icon */}
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    {awards.map((award, index) => (
+                                        <tr key={award.award_id} className="bg-gray-800 odd:bg-gray-700">
+                                            <td className="px-4 py-2 border-b border-gray-600">{index + 1}</td>
+                                            <td className="px-4 py-2 border-b border-gray-600">{getCountryName(award.country_id)}</td>
+                                            <td className="px-4 py-2 border-b border-gray-600">{award.year}</td>
+                                            <td className="px-4 py-2 border-b border-gray-600">{award.award_name}</td>
+                                            <td className="px-4 py-2 text-left border-b border-gray-600">
+                                                <button onClick={() => handleDelete(award.award_id)} className="text-red-500 hover:text-red-600 mr-2">
+                                                    <i className="fas fa-trash"></i> {/* Delete Icon */}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
                     </section>
-                                            {/* Pagination Component */}
-                                            <PaginationAdmin 
-                            currentPage={1} 
-                            totalEntries={100} 
-                            entriesPerPage={10} 
-                            onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
-                        />
+                    {/* Pagination Component */}
+                    <PaginationAdmin 
+                        currentPage={1} 
+                        totalEntries={awards.length} 
+                        entriesPerPage={10} 
+                        onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
+                    />
                 </main>
-
             </div>
 
             <Footer />
