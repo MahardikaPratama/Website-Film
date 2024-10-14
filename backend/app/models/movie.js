@@ -27,15 +27,13 @@ const Movie = {
                 // LIMIT $1 OFFSET $2`,
                 const res = await pool.query(
                     `SELECT  m.movie_id, m.title, m.year, m.synopsis, m.views, 
-                        m.movie_rate, 
-                        m.alternative_title, 
+                        m.movie_rate,  m.alternative_title, 
                         m.approval_status,
                         m.release_status,
                         COALESCE(c.country_name, 'Unknown Country') AS country_name, 
                         COALESCE(STRING_AGG(DISTINCT g.genre_name, ', '), 'No Genre') AS genres, 
-                        COALESCE(STRING_AGG(DISTINCT a.actor_name, ', '), 'No Actors') AS actors,  
-                        u.username,
-                        m.poster_url  
+                        COALESCE(STRING_AGG(DISTINCT a.actor_name || ' (' || a.foto_url || ')', ', '), 'No Actors') AS actors,
+                        u.username, m.poster_url  
                     FROM movies m
                     LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id
                     LEFT JOIN genres g ON mg.genre_id = g.genre_id
@@ -217,9 +215,56 @@ const Movie = {
 
 
     
+    // getById: async (id) => {
+    //     try {
+    //         const res = await pool.query('SELECT * FROM movies WHERE movie_id = $1', [id]);
+    //         return res.rows[0];
+    //     } catch (error) {
+    //         throw new Error('Failed to get movie by id: ' + error.message);
+    //     }
+    // }
     getById: async (id) => {
         try {
-            const res = await pool.query('SELECT * FROM movies WHERE movie_id = $1', [id]);
+            const res = await pool.query(`
+                SELECT 
+                    m.movie_id, 
+                    m.poster_url, 
+                    m.title, 
+                    m.alternative_title, 
+                    m.movie_rate, 
+                    m.views, 
+                    m.year, 
+                    m.synopsis, 
+                    m.release_status, 
+                    m.approval_status, 
+                    m.link_trailer, 
+                    COALESCE(c.country_name, 'Unknown Country') AS country_name,
+                    COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genre_name,
+                    COALESCE(STRING_AGG(DISTINCT a.actor_name || ' (' || a.foto_url || ')', ', '), 'No Actors') AS actors,
+                    u.username
+                FROM movies m
+                LEFT JOIN countries c ON m.country_id = c.country_id
+                LEFT JOIN categorized_as ca ON m.movie_id = ca.movie_id
+                LEFT JOIN genres g ON ca.genre_id = g.genre_id
+                LEFT JOIN acted_in ai ON m.movie_id = ai.movie_id
+                LEFT JOIN actors a ON ai.actor_id = a.actor_id
+                LEFT JOIN users u ON m.user_id = u.user_id
+                WHERE m.movie_id = $1
+                GROUP BY 
+                    m.movie_id, 
+                    m.poster_url, 
+                    m.title, 
+                    m.alternative_title, 
+                    m.movie_rate, 
+                    m.views, 
+                    m.year, 
+                    m.synopsis, 
+                    m.release_status, 
+                    m.approval_status, 
+                    m.link_trailer, 
+                    c.country_name, 
+                    u.username
+            `, [id]);
             return res.rows[0];
         } catch (error) {
             throw new Error('Failed to get movie by id: ' + error.message);

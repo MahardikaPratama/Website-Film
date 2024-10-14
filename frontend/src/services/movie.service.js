@@ -5,6 +5,10 @@ class MovieDataService {
         return http.get(`/movies?page=${page}&limit=${limit}`);
     }
     
+    getAll() {
+        return http.get(`/movies`);  // Endpoint API untuk mengambil semua film
+    }
+    
     searchMovies(keyword, page = 1, limit = 10) {
         return http.get(`/movies/search?keyword=${keyword}&page=${page}&limit=${limit}`);
     }
