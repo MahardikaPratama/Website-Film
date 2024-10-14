@@ -18,7 +18,6 @@ exports.getAllMovies = async (req, res) => {
 
 
 // Search Movies with Pagination
-// Search Movies with Pagination
 exports.searchMovies = async (req, res) => {
     try {
         const { keyword = '', page = 1, limit = 10 } = req.query; 
@@ -71,12 +70,31 @@ exports.filterSortMovies = async (req, res) => {
 
 exports.getMovieById = async (req, res) => {
     try {
-        const movie = await Movie.getById(req.params.id);
+        const movie = await Movie.getMovieById(req.params.id);
         res.json(movie);
     } catch (error) {
         res.status(500).send(error.message);
     }
 };
+
+exports.getMovieBySameGenre = async (req, res) => {
+    try {
+        const { movie_id } = req.params;  
+
+        if (!movie_id) {
+            return res.status(400).send('Movie ID is required');
+        }
+
+        const movies = await Movie.getMovieBySameGenre(movie_id);
+
+        res.json(movies);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+
+
 
 exports.createMovie = async (req, res) => {
     try {
@@ -118,3 +136,13 @@ exports.addToWishlist = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
+exports.getWishlist = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const movies = await Movie.getWishlist(user_id);
+        res.json(movies);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}

@@ -11,41 +11,16 @@ const Movie = {
             const totalCount = parseInt(totalMovies.rows[0].count, 10);
     
             // Ambil data film
-            // const res = await pool.query(
-                // `SELECT m.movie_id, m.title, m.year, 
-                // `SELECT m.movie_id, m.poster_url, m.title, m.alternative_title, 
-                // m.movie_rate, m.views, m.year, m.synopsis, 
-                // m.release_status, m.approval_status, m.link_trailer, 
-                // m.country_id, m.user_id
-                // COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres, 
-                // m.movie_rate, m.views, m.poster_url, m.release_status
-                // FROM movies m 
-                // LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
-                // LEFT JOIN genres g ON mg.genre_id = g.genre_id 
-                // GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status 
-                // ORDER BY m.title ASC 
-                // LIMIT $1 OFFSET $2`,
-                const res = await pool.query(
-                    `SELECT  m.movie_id, m.title, m.year, m.synopsis, m.views, 
-                        m.movie_rate,  m.alternative_title, 
-                        m.approval_status,
-                        m.release_status,
-                        COALESCE(c.country_name, 'Unknown Country') AS country_name, 
-                        COALESCE(STRING_AGG(DISTINCT g.genre_name, ', '), 'No Genre') AS genres, 
-                        COALESCE(STRING_AGG(DISTINCT a.actor_name || ' (' || a.foto_url || ')', ', '), 'No Actors') AS actors,
-                        u.username, m.poster_url  
-                    FROM movies m
-                    LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id
-                    LEFT JOIN genres g ON mg.genre_id = g.genre_id
-                    LEFT JOIN acted_in ai ON m.movie_id = ai.movie_id
-                    LEFT JOIN actors a ON ai.actor_id = a.actor_id
-                    LEFT JOIN countries c ON m.country_id = c.country_id  
-                    LEFT JOIN users u ON m.user_id = u.user_id  
-                    GROUP BY 
-                        m.movie_id, m.title, m.year, m.synopsis, m.views, m.movie_rate, m.poster_url, 
-                        m.alternative_title, m.approval_status, m.release_status, c.country_name, u.username
-                    ORDER BY m.title ASC
-                    LIMIT $1 OFFSET $2;`,  
+            const res = await pool.query(
+                `SELECT m.movie_id, m.title, m.year, 
+                COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genres, 
+                m.movie_rate, m.views, m.poster_url, m.release_status
+                FROM movies m 
+                LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
+                LEFT JOIN genres g ON mg.genre_id = g.genre_id 
+                GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status 
+                ORDER BY m.title ASC 
+                LIMIT $1 OFFSET $2`, 
                 [limit, offset]
             );
     
@@ -75,7 +50,7 @@ const Movie = {
                 LEFT JOIN genres g ON mg.genre_id = g.genre_id
                 LEFT JOIN acted_in ai ON m.movie_id = ai.movie_id
                 LEFT JOIN actors a ON ai.actor_id = a.actor_id
-                WHERE m.title ILIKE $1 OR m.alternative_title ILIKE $1 OR m.synopsis ILIKE $1 OR a.actor_name ILIKE $1
+                WHERE m.title ILIKE $1 OR m.alternative_title ILIKE OR a.actor_name ILIKE $1
                 GROUP BY m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status
                 ORDER BY m.title ASC 
                 LIMIT $2 OFFSET $3`,
@@ -215,70 +190,61 @@ const Movie = {
 
 
     
-    // getById: async (id) => {
-    //     try {
-    //         const res = await pool.query('SELECT * FROM movies WHERE movie_id = $1', [id]);
-    //         return res.rows[0];
-    //     } catch (error) {
-    //         throw new Error('Failed to get movie by id: ' + error.message);
-    //     }
-    // }
-    getById: async (id) => {
+    getMovieById: async (id) => {
         try {
             const res = await pool.query(`
-                SELECT 
-                    m.movie_id, 
-                    m.poster_url, 
-                    m.title, 
-                    m.alternative_title, 
-                    m.movie_rate, 
-                    m.views, 
-                    m.year, 
-                    m.synopsis, 
-                    m.release_status, 
-                    m.approval_status, 
-                    m.link_trailer, 
-                    COALESCE(c.country_name, 'Unknown Country') AS country_name,
-                    COALESCE(STRING_AGG(g.genre_name, ', '), 'No Genre') AS genre_name,
-                    COALESCE(STRING_AGG(DISTINCT a.actor_name || ' (' || a.foto_url || ')', ', '), 'No Actors') AS actors,
-                    u.username
-                FROM movies m
-                LEFT JOIN countries c ON m.country_id = c.country_id
-                LEFT JOIN categorized_as ca ON m.movie_id = ca.movie_id
-                LEFT JOIN genres g ON ca.genre_id = g.genre_id
-                LEFT JOIN acted_in ai ON m.movie_id = ai.movie_id
-                LEFT JOIN actors a ON ai.actor_id = a.actor_id
-                LEFT JOIN users u ON m.user_id = u.user_id
+                SELECT m.movie_id, m.title, m.year, m.synopsis, m.alternative_title, m.link_trailer, m.country_id, m.approval_status, 
+                COALESCE(STRING_AGG(DISTINCT g.genre_name, ', '), 'No Genre') AS genres,
+                COALESCE(STRING_AGG(DISTINCT p.platform_name, ', '), 'No Platform') AS platforms, 
+                m.movie_rate, m.views, m.poster_url, m.release_status
+                FROM movies m 
+                LEFT JOIN categorized_as mg ON m.movie_id = mg.movie_id 
+                LEFT JOIN genres g ON mg.genre_id = g.genre_id
+                LEFT JOIN available_on ap ON m.movie_id = ap.movie_id
+                LEFT JOIN platforms p ON ap.platform_id = p.platform_id
                 WHERE m.movie_id = $1
-                GROUP BY 
-                    m.movie_id, 
-                    m.poster_url, 
-                    m.title, 
-                    m.alternative_title, 
-                    m.movie_rate, 
-                    m.views, 
-                    m.year, 
-                    m.synopsis, 
-                    m.release_status, 
-                    m.approval_status, 
-                    m.link_trailer, 
-                    c.country_name, 
-                    u.username
+                GROUP BY m.movie_id, m.title, m.year, m.synopsis, m.alternative_title, m.link_trailer, m.country_id, m.approval_status, 
+                         m.movie_rate, m.views, m.poster_url, m.release_status
             `, [id]);
+    
             return res.rows[0];
         } catch (error) {
             throw new Error('Failed to get movie by id: ' + error.message);
         }
     },
+
+    getMovieBySameGenre: async (movie_id) => {
+        try {
+            const res = await pool.query(`
+                SELECT DISTINCT m.movie_id, m.title, m.year, m.movie_rate, m.views, m.poster_url, m.release_status
+                FROM movies m
+                JOIN categorized_as mg ON m.movie_id = mg.movie_id
+                JOIN genres g ON mg.genre_id = g.genre_id
+                WHERE g.genre_id IN (
+                    SELECT g2.genre_id
+                    FROM categorized_as mg2
+                    JOIN genres g2 ON mg2.genre_id = g2.genre_id
+                    WHERE mg2.movie_id = $1
+                )
+                AND m.movie_id != $1
+                ORDER BY m.title ASC
+            `, [movie_id]);
+    
+            return res.rows;
+        } catch (error) {
+            throw new Error('Failed to get movies by same genre: ' + error.message);
+        }
+    },
+    
+
+    
+    
     create: async (data) => {
-        // const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
-        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id } = data;
+        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
         try {
             const res = await pool.query(
-                // 'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
-                'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
-                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id]
-                // [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id]
+                'INSERT INTO movies (poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id]
             );
             return res.rows[0];
         } catch (error) {
@@ -286,14 +252,11 @@ const Movie = {
         }
     },
     update: async (id, data) => {
-        // const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
-        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id } = data;
+        const { poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id } = data;
         try {
             const res = await pool.query(
-                // 'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11 WHERE movie_id = $12 RETURNING *',
-                // [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, id]
-                'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11, user_id = $12 WHERE movie_id = $13 RETURNING *',
-                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, user_id, id]
+                'UPDATE movies SET poster_url = $1, title = $2, alternative_title = $3, movie_rate = $4, views = $5, year = $6, synopsis = $7, release_status = $8, approval_status = $9, link_trailer = $10, country_id = $11 WHERE movie_id = $12 RETURNING *',
+                [poster_url, title, alternative_title, movie_rate, views, year, synopsis, release_status, approval_status, link_trailer, country_id, id]
             );
             return res.rows[0];
         } catch (error) {
@@ -315,7 +278,40 @@ const Movie = {
         } catch (error) {
             throw new Error('Failed to add movie to wishlist: ' + error.message);
         }
+    },
+    getWishlist: async (user_id) => {
+        if (!user_id) {
+            throw new Error('User ID is required');
+        }
+    
+        try {
+            const query = `
+                SELECT 
+                    m.movie_id, 
+                    m.title, 
+                    m.year, 
+                    m.movie_rate, 
+                    m.views, 
+                    m.poster_url, 
+                    m.release_status
+                FROM 
+                    movies m
+                JOIN 
+                    wishlists w ON m.movie_id = w.movie_id
+                WHERE 
+                    w.user_id = $1
+            `;
+            
+            const res = await pool.query(query, [user_id]);
+            return res.rows;
+        } catch (error) {
+            // Log the error to console for debugging (optional)
+            console.error('Database query error:', error);
+            throw new Error('Failed to get wishlist: ' + error.message);
+        }
     }
+    
+
 };
 
 module.exports = Movie;

@@ -102,7 +102,7 @@ function Home() {
     };
 
     const handleDramaClick = (id) => {
-        navigate(`/detail/${id}`);
+        navigate(`/movies/${id}`);
     };
 
     const handleSortChange = (e) => {

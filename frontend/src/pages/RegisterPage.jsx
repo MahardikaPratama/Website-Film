@@ -98,7 +98,7 @@ const RegisterPage = () => {
                     password: formData.password,
                 });
                 console.log(response);
-                navigate('/login');
+                navigate('/email-verification');
             } catch (error) {
                 if (error.response?.status === 400 && error.response.data?.message) {
                     // Handling error jika username atau email sudah ada

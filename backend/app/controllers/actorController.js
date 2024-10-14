@@ -18,6 +18,15 @@ exports.getById = async (req, res) => {
     }
 };
 
+exports.getByMovie = async (req, res) => {
+    try {
+        const actors = await Actor.getByMovie(req.params.movie_id);
+        res.json(actors);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 exports.create = async (req, res) => {
     try {
         const actor = await Actor.create(req.body);

@@ -16,6 +16,9 @@ import CmsComment from './pages/cmsComment';
 import CmsUsers from './pages/cmsUsers';
 import CmsDramaInput from './pages/cmsDramaInput';
 import EmailVerification from './pages/EmailVerification';
+import EmailVerified from './pages/EmailVerified';
+import NotFoundPage from './pages/NotFoundPage';
+import PrivateRoute from './components/PrivateRoute'; 
 import './css/index.css';
 import '../src/css/comment.css';
 
@@ -24,21 +27,26 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/detail/:id" element={<DetailPage />} />
+        <Route path="/movies/:id" element={<DetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/cms-drama" element={<CmsDrama />} />
-        <Route path="/cms-country" element={<CmsCountry />} />
-        <Route path="/cms-awards" element={<CmsAward />} />
-        <Route path="/cms-genres" element={<CmsGenre />} />
-        <Route path="/cms-actors" element={<CmsActor />} />
-        <Route path="/cms-comments" element={<CmsComment />} />
-        <Route path="/cms-users" element={<CmsUsers />} />
-        <Route path="/cms-drama-input" element={<CmsDramaInput />} />
+
+        {/* Hanya admin yang bisa mengakses dashboard dan CMS */}
+        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} requiredRole="ADMIN" />} />
+        <Route path="/cms-drama" element={<PrivateRoute element={<CmsDrama />} requiredRole="ADMIN" />} />
+        <Route path="/cms-country" element={<PrivateRoute element={<CmsCountry />} requiredRole="ADMIN" />} />
+        <Route path="/cms-awards" element={<PrivateRoute element={<CmsAward />} requiredRole="ADMIN" />} />
+        <Route path="/cms-genres" element={<PrivateRoute element={<CmsGenre />} requiredRole="ADMIN" />} />
+        <Route path="/cms-actors" element={<PrivateRoute element={<CmsActor />} requiredRole="ADMIN" />} />
+        <Route path="/cms-comments" element={<PrivateRoute element={<CmsComment />} requiredRole="ADMIN" />} />
+        <Route path="/cms-users" element={<PrivateRoute element={<CmsUsers />} requiredRole="ADMIN" />} />
+        <Route path="/cms-drama-input" element={<PrivateRoute element={<CmsDramaInput />} requiredRole="ADMIN" />} />
+
         <Route path="/email-verification" element={<EmailVerification />} />
+        <Route path="/email-verified" element={<EmailVerified />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

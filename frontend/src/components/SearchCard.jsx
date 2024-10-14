@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
 
-const SearchCard = ({ title, year, genres, rating, views, imageUrl, status }) => {
+const SearchCard = ({ title, year, genres, rating, views, imageUrl, status, onClick }) => {
     const [isWishlisted, setIsWishlisted] = useState(false); // State untuk status wishlist
 
     // Fungsi untuk memformat jumlah views
@@ -36,7 +36,10 @@ const SearchCard = ({ title, year, genres, rating, views, imageUrl, status }) =>
     };
 
     return (
-        <div className="relative flex flex-col items-center p-4 space-y-4 transition-transform transform bg-gray-800 rounded-lg shadow-lg cursor-pointer sm:flex-row sm:space-y-0 sm:space-x-4 hover:scale-105 hover:bg-gray-700 hover:shadow-lg">
+        <div 
+            className="relative flex flex-col items-center p-4 space-y-4 transition-transform transform bg-gray-800 rounded-lg shadow-lg cursor-pointer sm:flex-row sm:space-y-0 sm:space-x-4 hover:scale-105 hover:bg-gray-700 hover:shadow-lg"
+            onClick={onClick}    
+        >
             {/* Gambar Poster dengan tombol wishlist di dalamnya */}
             <div className="relative">
                 <img

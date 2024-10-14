@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import userService from "../services/user.service";
 
 const EmailVerification = () => {
     const [isSent, setIsSent] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
+    const search = useLocation().search;
+    const token = new URLSearchParams(search).get("token");
+    const email = new URLSearchParams(search).get("email");
+
+    useEffect(() => {
+        const verifyEmail = async () => {
+            try {
+                await userService.verifyEmail(token, email);
+                setTimeout(() => {
+                    navigate("/login");
+                }, 3000); // Redirect to login after 3 seconds
+            } catch (error) {
+                setErrorMessage("Invalid or expired token.");
+            }
+        };
+        verifyEmail();
+    }, [token, email, navigate]);
 
     const handleResendVerification = () => {
-        // Simulasi pengiriman ulang link verifikasi email
         setIsSent(true);
         setErrorMessage('');
         alert("Link verifikasi telah dikirim ulang ke email Anda.");

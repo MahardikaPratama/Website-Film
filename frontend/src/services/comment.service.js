@@ -9,6 +9,10 @@ class CommentDataService {
         return http.get(`/comments/${id}`);
     }
 
+    getByMovie(movie_id) {
+        return http.get(`/comments/movie/${movie_id}`);
+    }
+
     create(data) {
         return http.post(`/comments`, data);
     }

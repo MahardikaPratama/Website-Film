@@ -139,7 +139,11 @@ const SidebarNavbar = ({ onCountryFilter, currentFilter, searchTerm, onSearchCha
                                 {showSearchResults && searchResults.length > 0 && (
                                     <ul ref={searchResultsRef} className="absolute z-10 w-full overflow-y-auto bg-gray-800 border border-gray-600 rounded-lg max-h-60">
                                         {searchResults.slice(0, 5).map((result) => (
-                                            <li key={result.id} className="flex items-center p-2 cursor-pointer hover:bg-gray-700">
+                                            <li 
+                                                key={result.id} 
+                                                className="flex items-center p-2 cursor-pointer hover:bg-gray-700"
+                                                onClick={() => navigate(`/movies/${result.movie_id}`)}
+                                            >
                                                 <img src={result.poster_url} alt={result.title} className="w-12 h-16 mr-2 rounded" />
                                                 <span className="text-white">{result.title}</span>
                                             </li>

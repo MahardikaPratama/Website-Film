@@ -9,6 +9,13 @@ const Actor = {
         const res = await pool.query('SELECT * FROM actors WHERE actor_id = $1', [id]);
         return res.rows[0];
     },
+    getByMovie: async (movie_id) => {
+        const res = await pool.query(
+            'SELECT * FROM actors WHERE actor_id IN (SELECT actor_id FROM acted_in WHERE movie_id = $1)',
+            [movie_id]
+        );
+        return res.rows;
+    },    
     create: async (data) => {
         const { actor_id, name, birth_date, foto  } = data;
         const res = await pool.query(

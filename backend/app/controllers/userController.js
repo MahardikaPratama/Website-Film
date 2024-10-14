@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
+
 // Mendapatkan semua user
 exports.getAll = async (req, res) => {
     try {

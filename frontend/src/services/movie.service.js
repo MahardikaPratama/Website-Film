@@ -1,30 +1,33 @@
-import http from "../http-common"; 
+import http from "../http-common";
 
 class MovieDataService {
     getAllMovies(page = 1, limit = 10) {
         return http.get(`/movies?page=${page}&limit=${limit}`);
     }
     
-    getAll() {
-        return http.get(`/movies`);  // Endpoint API untuk mengambil semua film
-    }
-    
     searchMovies(keyword, page = 1, limit = 10) {
         return http.get(`/movies/search?keyword=${keyword}&page=${page}&limit=${limit}`);
     }
+    
 
     filterSortMovies(filters, sort, page = 1, limit = 10) {
+        // Menyiapkan parameter query
         const params = {
             ...filters, 
             sort_by: sort, 
             page,
             limit
         };
+        console.log("Filter-Sort Params:", params);
         return http.get(`/movies/filter-sort`, { params });
     }
 
     getMovieById(id) {
         return http.get(`/movies/${id}`);
+    }
+
+    getMovieBySameGenre(id) {
+        return http.get(`/movies/same-genre/${id}`);  
     }
 
     createMovie(data) {
@@ -39,13 +42,12 @@ class MovieDataService {
         return http.delete(`/movies/${id}`);
     }
 
-    addToWishlist(movieId) {
-        return http.post(`/movies/wishlist`, { movieId });
+    addToWishlist(user_id, movie_id) {
+        return http.post(`/movies/wishlist`, { user_id, movie_id });
     }
 
-    // New method for getting recommended movies
-    getRecommendedMovies() {
-        return http.get(`/movies/recommended`);
+    getWishlist(user_id) {
+        return http.get(`/movies/wishlist/${user_id}`);
     }
 
 }

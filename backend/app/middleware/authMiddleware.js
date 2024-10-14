@@ -1,8 +1,8 @@
+// authMiddleware.js
 const jwt = require('jsonwebtoken');
 
 // Middleware untuk memverifikasi token
 const authenticateToken = (req, res, next) => {
-    // Ambil token dari cookie
     const token = req.cookies.token;
 
     if (!token) return res.sendStatus(401); // Jika token tidak ada, unauthorized
@@ -24,4 +24,5 @@ const authorizeRole = (role) => {
     };
 };
 
+// Export middleware
 module.exports = { authenticateToken, authorizeRole };

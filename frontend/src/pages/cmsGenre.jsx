@@ -1,66 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SidebarAdmin from '../components/SidebarAdmin';
 import Footer from '../components/footer';
 import PaginationAdmin from '../components/PaginationAdmin';
-import genreDataService from '../services/genre.service'; // Import the genre service
 import '../css/style.css';
 
 const CmsGenre = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
-    const [genres, setGenres] = useState([]); // State to hold genre data
-    const [newGenre, setNewGenre] = useState(''); // State for new genre input
-    const [currentPage, setCurrentPage] = useState(1);
-    const genresPerPage = 5;
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);
-    };
-
-    useEffect(() => {
-        const fetchGenres = async () => {
-            try {
-                const response = await genreDataService.getAll();
-                setGenres(response.data); // Adjust according to your API response structure
-            } catch (err) {
-                setError(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchGenres();
-    }, []);
-
-    const handleChange = (e) => {
-        setNewGenre(e.target.value);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!newGenre) return; // Prevent submitting empty genres
-
-        try {
-            await genreDataService.create({ genre: newGenre });
-            setNewGenre(''); // Reset the input field
-
-            // Fetch updated list of genres after adding a new one
-            const response = await genreDataService.getAll();
-            setGenres(response.data);
-        } catch (err) {
-            setError(err);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await genreDataService.delete(id);
-            const response = await genreDataService.getAll();
-            setGenres(response.data); // Update the genre list after deletion
-        } catch (err) {
-            setError(err);
-        }
     };
 
     return (
@@ -94,64 +42,125 @@ const CmsGenre = () => {
                         </svg>
                     </button>
 
-                    {/* Section for Genre management */}
+                    {/* Section for country management */}
                     <section className="container p-4 mx-auto bg-gray-800 rounded-md shadow-md md:p-6">
-                        {/* Form to add a new Genre */}
-                        <form onSubmit={handleSubmit} className="flex items-center mb-6 space-x-4">
-                            <label htmlFor="Genre" className="block font-medium text-gray-300">Genre</label>
+                        {/* Form to add a new country */}
+                        <form className="flex items-center mb-6 space-x-4">
+                            <label htmlFor="country" className="block font-medium text-gray-300">Country</label>
                             <input 
                                 type="text" 
-                                id="Genre" 
-                                value={newGenre}
-                                onChange={handleChange}
+                                id="country" 
+                                name="country" 
                                 className="block w-full p-2 text-gray-300 bg-gray-800 border border-gray-700 rounded-md md:w-1/3 focus:ring focus:ring-orange-500" 
-                                required
                             />
                             <button type="submit" className="px-4 py-2 text-white bg-orange-500 rounded-md hover:bg-orange-600">Submit</button>
                         </form>
 
-                        {/* Table displaying Genres */}
+                        {/* Table displaying countries */}
                         <div className="overflow-x-auto">
                             <table className="min-w-full text-gray-300 bg-gray-800">
                                 <thead>
                                     <tr className="bg-gray-700">
                                         <th className="px-4 py-2 border-b border-gray-600"></th>
-                                        <th className="px-4 py-2 text-left border-b border-gray-600">Genre</th>
+                                        <th className="px-4 py-2 text-left border-b border-gray-600">Country</th>
                                         <th className="px-4 py-2 text-left border-b border-gray-600">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {isLoading ? (
-                                        <tr>
-                                            <td colSpan="3" className="text-center py-4">Loading genres...</td>
-                                        </tr>
-                                    ) : error ? (
-                                        <tr>
-                                            <td colSpan="3" className="text-center text-red-500 py-4">Error fetching genres!</td>
-                                        </tr>
-                                    ) : (
-                                        genres.slice((currentPage - 1) * genresPerPage, currentPage * genresPerPage).map((genre, index) => (
-                                            <tr key={genre.id} className="bg-gray-800 odd:bg-gray-700">
-                                                <td className="px-4 py-2 border-b border-gray-600">{index + 1}</td>
-                                                <td className="px-4 py-2 border-b border-gray-600">{genre.genre_name}</td>
-                                                <td className="px-4 py-2 text-left border-b border-gray-600">
-                                                    <button className="text-red-500 hover:text-red-600 mr-2" onClick={() => handleDelete(genre.id)}>
-                                                        <i className="fas fa-trash"></i> {/* Delete Icon */}
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
+                                    <tr className="bg-gray-800 odd:bg-gray-700">
+                                        <td className="px-4 py-2 border-b border-gray-600">1</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">
+                                            <input 
+                                                type="text" 
+                                                value="Japan" 
+                                                className="w-full bg-transparent border-none md:w-1/5 focus:ring-0" 
+                                            />
+                                            <label className="inline-flex items-center ml-2">
+                                                <input 
+                                                    type="radio" 
+                                                    name="default" 
+                                                    value="1" 
+                                                    className="text-orange-500 form-radio" 
+                                                />
+                                                <span className="ml-2 text-gray-300">Default</span>
+                                            </label>
+                                        </td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-edit"></i> {/* Edit Icon */}
+                                            </button>
+                                            |
+                                            <button href="#" className="text-red-500 hover:text-red- ml-2">
+                                                <i className="fas fa-trash"></i> {/* Delete Icon */}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-gray-800">
+                                        <td className="px-4 py-2 border-b border-gray-600">2</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">
+                                            <input 
+                                                type="text" 
+                                                value="Korea" 
+                                                className="w-full bg-transparent border-none md:w-1/5 focus:ring-0" 
+                                            />
+                                            <label className="inline-flex items-center ml-2">
+                                                <input 
+                                                    type="radio" 
+                                                    name="default" 
+                                                    value="2" 
+                                                    className="text-orange-500 form-radio" 
+                                                />
+                                                <span className="ml-2 text-gray-300">Default</span>
+                                            </label>
+                                        </td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-edit"></i> {/* Edit Icon */}
+                                            </button>
+                                            |
+                                            <button href="#" className="text-red-500 hover:text-red- ml-2">
+                                                <i className="fas fa-trash"></i> {/* Delete Icon */}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-gray-800 odd:bg-gray-700">
+                                        <td className="px-4 py-2 border-b border-gray-600">3</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">
+                                            <input 
+                                                type="text" 
+                                                value="China" 
+                                                className="w-full bg-transparent border-none md:w-1/5 focus:ring-0" 
+                                            />
+                                            <label className="inline-flex items-center ml-2">
+                                                <input 
+                                                    type="radio" 
+                                                    name="default" 
+                                                    value="3" 
+                                                    className="text-orange-500 form-radio" 
+                                                />
+                                                <span className="ml-2 text-gray-300">Default</span>
+                                            </label>
+                                        </td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-edit"></i> {/* Edit Icon */}
+                                            </button>
+                                            |
+                                            <button href="#" className="text-red-500 hover:text-red- ml-2">
+                                                <i className="fas fa-trash"></i> {/* Delete Icon */}
+                                            </button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         {/* Pagination Component */}
                         <PaginationAdmin 
-                            currentPage={currentPage} 
-                            totalEntries={genres.length} 
-                            entriesPerPage={genresPerPage} 
-                            onPageChange={(newPage) => setCurrentPage(newPage)} 
+                            currentPage={1} 
+                            totalEntries={100} 
+                            entriesPerPage={10} 
+                            onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
                         />
                     </section>
                 </main>

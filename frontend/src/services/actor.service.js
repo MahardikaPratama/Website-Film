@@ -9,6 +9,10 @@ class ActorDataService {
         return http.get(`/actors/${id}`);
     }
 
+    getByMovie(movie_id) {
+        return http.get(`/actors/movie/${movie_id}`);
+    }
+    
     create(data) {
         return http.post(`/actors`, data);
     }

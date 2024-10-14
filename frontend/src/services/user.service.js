@@ -36,6 +36,11 @@ class UserDataService {
     getProfile() {
         return http.get(`/users/profile`);
     }
+
+    verifyEmail(token, email) {
+        return http.get(`/users/verify-email?token=${token}&email=${email}`);
+    }
+    
 }
 
 const userDataService = new UserDataService();

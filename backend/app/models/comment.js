@@ -9,14 +9,33 @@ const Comment = {
         const res = await pool.query('SELECT * FROM comments WHERE comment_id = $1', [id]);
         return res.rows[0];
     },
+    getByMovie: async (movie_id) => {
+        try {
+            const res = await pool.query(`
+                SELECT c.comment_id, c.movie_id, c.user_id, c.detail_comment, c.created_time, c.comment_rate, u.username
+                FROM comments c
+                JOIN users u ON c.user_id = u.user_id
+                WHERE c.movie_id = $1
+                AND c.approval_status = 'APPROVED'
+                ORDER BY c.created_time DESC
+            `, [movie_id]);
+    
+            return res.rows;
+        } catch (error) {
+            throw new Error('Failed to get comments by movie: ' + error.message);
+        }
+    },    
     create: async (data) => {
-        const { comment_id, rate, detail_comment, approvalstatus, user_id, movie_id } = data;
-        const res = await pool.query(
-            'INSERT INTO comments (comment_id, rate, detail_comment, approvalstatus, user_id, movie_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [comment_id, rate, detail_comment, approvalstatus, user_id, movie_id]
-        );
-        return res.rows[0];
-    },
+        const { comment_rate, detail_comment, user_id, movie_id } = data; // Hanya menerima parameter yang dibutuhkan
+        try {
+            const approval_status = 'APPROVED';
+            await pool.query('CALL insert_comment($1, $2, $3, $4, $5)', [comment_rate, detail_comment, approval_status, user_id, movie_id]);
+            const res = await pool.query('SELECT * FROM comments WHERE user_id = $1 AND movie_id = $2', [user_id, movie_id]);
+            return res.rows[0];
+        } catch (error) {
+            throw new Error('Failed to create comment: ' + error.message);
+        }
+    },    
     update: async (id, data) => {
         const { comment_id, rate, detail_comment, approvalstatus, user_id, movie_id } = data;
         const res = await pool.query(

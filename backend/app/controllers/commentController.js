@@ -18,6 +18,15 @@ exports.getById = async (req, res) => {
     }
 };
 
+exports.getByMovie = async (req, res) => {
+    try {
+        const comments = await Comment.getByMovie(req.params.movie_id);
+        res.json(comments);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 exports.create = async (req, res) => {
     try {
         const comment = await Comment.create(req.body);

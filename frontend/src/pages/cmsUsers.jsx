@@ -1,49 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SidebarAdmin from '../components/SidebarAdmin';
 import Footer from '../components/footer';
 import PaginationAdmin from '../components/PaginationAdmin';
-import userDataService from '../services/user.service'; // Import the user service
 import '../css/style.css';
 
 const CmsUsers = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
-    const [users, setUsers] = useState([]); // State to hold user data
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 10;
 
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible);
     };
-
-    // Fetch users from the database
-    const fetchUsers = async () => {
-        try {
-            const response = await userDataService.getAll();
-            setUsers(response.data); // Assuming response.data contains the list of users
-        } catch (error) {
-            console.error("There was an error fetching the users!", error);
-        }
-    };
-
-    // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const newUser = { username, email };
-            await userDataService.create(newUser);
-            setUsername('');
-            setEmail('');
-            fetchUsers(); // Refresh the user list after adding
-        } catch (error) {
-            console.error("There was an error creating the user!", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchUsers(); // Fetch users when the component mounts
-    }, []);
 
     return (
         <div className="flex flex-col min-h-screen text-gray-300 bg-gray-900">
@@ -78,15 +44,13 @@ const CmsUsers = () => {
 
                     <section className="container p-4 mx-auto bg-gray-800 rounded-md shadow-md md:p-6">
                         {/* Form to add a new user */}
-                        <form className="grid w-full max-w-3xl grid-cols-2 gap-4 p-4 mb-6" onSubmit={handleSubmit}>
+                        <form className="grid w-full max-w-3xl grid-cols-2 gap-4 p-4 mb-6">
                             <div className="flex flex-col w-full">
                                 <label htmlFor="username" className="block font-medium text-gray-300">Username</label>
                                 <input 
                                     type="text" 
                                     id="username" 
                                     name="username" 
-                                    value={username} // Controlled input
-                                    onChange={(e) => setUsername(e.target.value)} // Update state
                                     className="block w-full p-2 text-gray-300 bg-gray-700 border border-gray-600 rounded-md focus:ring focus:ring-orange-500" 
                                 />
                             </div>
@@ -96,8 +60,6 @@ const CmsUsers = () => {
                                     type="email" 
                                     id="email" 
                                     name="email" 
-                                    value={email} // Controlled input
-                                    onChange={(e) => setEmail(e.target.value)} // Update state
                                     className="block w-full p-2 text-gray-300 bg-gray-700 border border-gray-600 rounded-md focus:ring focus:ring-orange-500" 
                                 />
                             </div>
@@ -124,34 +86,64 @@ const CmsUsers = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage).map((user, index) => (
-                                        <tr key={user.id} className="bg-gray-800 odd:bg-gray-700">
-                                            <td className="px-4 py-2 border-b border-gray-600">{index + 1}</td>
-                                            <td className="px-4 py-2 border-b border-gray-600">{user.username}</td>
-                                            <td className="px-4 py-2 border-b border-gray-600">{user.email}</td>
-                                            <td className="px-4 py-2 text-left border-b border-gray-600">
-                                                <button className="text-red-500 hover:text-red-600 mr-2">
-                                                    <i className="fas fa-envelope"></i>
-                                                </button> |
-                                                <button className="text-red-500 hover:text-red-600 ml-2">
-                                                    <i className="fas fa-edit"></i>
-                                                </button> |
-                                                <button className="text-red-500 hover:text-red-600 ml-2">
-                                                    <i className="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    <tr className="bg-gray-800 odd:bg-gray-700">
+                                        <td className="px-4 py-2 border-b border-gray-600">1</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">anita1</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">anita@gmail.com</td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-envelope"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-edit"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-gray-800">
+                                        <td className="px-4 py-2 border-b border-gray-600">2</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">borang</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">bora@yahoo.com</td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                        <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-envelope"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-edit"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr className="bg-gray-800 odd:bg-gray-700">
+                                        <td className="px-4 py-2 border-b border-gray-600">3</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">ayano17</td>
+                                        <td className="px-4 py-2 border-b border-gray-600">ayano@gmail.com</td>
+                                        <td className="px-4 py-2 text-left border-b border-gray-600">
+                                            <button href="#" className="text-red-500 hover:text-red-600 mr-2">
+                                                <i className="fas fa-envelope"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-edit"></i>
+                                            </button> |
+                                            <button href="#" className="text-red-500 hover:text-red-600 ml-2">
+                                                <i className="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         {/* Pagination Component */}
                         <PaginationAdmin 
-                            currentPage={currentPage} 
-                            totalEntries={users.length} 
-                            entriesPerPage={usersPerPage} 
-                            onPageChange={setCurrentPage} 
+                            currentPage={1} 
+                            totalEntries={100} 
+                            entriesPerPage={10} 
+                            onPageChange={(newPage) => console.log('Page changed to:', newPage)} 
                         />
                     </section>
                 </main>
